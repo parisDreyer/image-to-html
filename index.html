@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <script src="./img_to_pixel.js"></script>
+
+    <img id="model-image" src="" width="auto" height="auto"/>
+    <canvas id="canvas", width="300" height="400" style="border:1px solid #000"></canvas>
+
+    <input id="image-path" type="text" placeholder="img source path" />
+    <button onClick="logImageData()">Analyze Img</button>
+    <script>
+        function logImageData() {
+            const imagePath = document.getElementById("image-path").value;
+            
+            appendImage(imagePath).onload = () => {
+                const data = imageData(document.getElementById("model-image"));
+                console.log(data);
+            }
+        }
+    </script>
+</body>
+</html>
