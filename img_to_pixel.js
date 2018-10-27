@@ -1,31 +1,6 @@
 // https://stackoverflow.com/questions/13963308/how-do-you-simply-obtain-an-array-of-pixel-data-from-an-image
 // https://stackoverflow.com/questions/8751020/how-to-get-a-pixels-x-y-coordinate-color-from-an-image
-
-// ========================
-// first example
-// imageData = context.getImageData(imageX, imageY, imageWidth, imageHeight); // get the image array
-
-//below is how to access to your pixel details 
-// red = imgData.data[0];
-// green = imgData.data[1];
-// blue = imgData.data[2];
-// alpha = imgData.data[3];
-
-// document.getElementById("data").innerHTML = imgData.data.toString();
-
-
-// ======
-//second example
-// var img = document.getElementById("my-image");
-// var canvas = document.createElement("canvas");
-// canvas.width = img.width;
-// canvas.height = img.height;
-// canvas.getContext("2d").drawImage(img, 0, 0, img.width, img.height);
-
-// ar pixelData = canvas.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
-
-
-
+// https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
 
 
 function canvasAndContext(){
@@ -34,10 +9,10 @@ function canvasAndContext(){
 } // get the context
 
 function appendImage(model_image){
-    const myImage = document.getElementById("model-image")
-    myImage.src = model_image;
-    myImage.crossOrigin = "Anonymous";
-    return myImage;
+   const myImage = document.getElementById("model-image");
+   myImage.src = model_image;
+   myImage.crossOrigin = "Anonymous"; //https://stackoverflow.com/questions/22097747/how-to-fix-getimagedata-error-the-canvas-has-been-tainted-by-cross-origin-data
+   return myImage;
 } // append an image to your html
 
 
@@ -55,3 +30,13 @@ function imageData(img) {
   ctx.drawImage(img, 0, 0, imgWdth, imgHght);
   return ctx.getImageData(0, 0, imgWdth, imgHght);
 } // get the image data from your image
+
+
+
+function rgbaAtImgCoordinate(ctx, x,y){
+    const pixel = ctx.getImageData(x, y, 1, 1);
+    const data = pixel.data;
+    const rgba = 'rgba(' + data[0] + ', ' + data[1] +
+        ', ' + data[2] + ', ' + (data[3] / 255) + ')';
+    return rgba;
+}
