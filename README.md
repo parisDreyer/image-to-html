@@ -26,3 +26,36 @@ Introducing `Image-to-Html`, a pixel-perfect webpage generator tool that convert
     - Upon clicking the submit button, the two equally-sized boxes with identical internal components but different background shading will render the image that was input into the bold-bordered input box.
 - The equally sized boxes will render two different events. The box on the left will render the user-input-image as an html img component. The box on the left is an html5 canvas that will render the image as it is deconstructed into rgba coordinates and then reconstructed into an html page. 
 - The example page identified in the above wireframe is simply a clone of the site itself, such that it represents the event that a user had taken a screenshot of the webpage and asked the Image-to-Html generator to generate a facsimile of the site.
+
+## Technologies
+- basic functionality will be implemented from scratch in javascript
+- text-recognition and advanced image recognition will use libraries
+    - I will not start the advanced elements until the basic functionality is complete.
+    - stay tuned for updates after Monday, November 5, 2018
+
+## Implementation Timeline
+
+#### Monday, October 29, 2018
+- Finish
+- Finish
+#### Tuesday, October 30, 2018
+- Finish
+- Finish
+#### Wednesday, October 31, 2018
+- Finish
+- Finish
+#### Thursday, November 1, 2018
+- Finish
+- Finish
+#### Friday, November 2, 2018
+- Finish
+- Finish
+#### Saturday, November 3, 2018
+- Finish
+- Finish
+#### Sunday, November 4, 2018
+- Finish
+- Finish
+#### Monday, November 5, 2018
+- Finish
+- Finish
