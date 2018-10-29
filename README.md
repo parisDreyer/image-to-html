@@ -36,26 +36,26 @@ Introducing `Image-to-Html`, a pixel-perfect webpage generator tool that convert
 ## Implementation Timeline
 
 #### Monday, October 29, 2018
-- Finish
-- Finish
+- Finish project proposal
+- Setup detection of main (largest) image elements
 #### Tuesday, October 30, 2018
-- Finish
-- Finish
+- Finish generation of main image elements into html containers
+- Establish naming convention for css classes
+- generate css file and html file with appropriate basic components 
 #### Wednesday, October 31, 2018
-- Finish
-- Finish
+- Detect medium-size details in image
+- Generate html and css from medium size details in image
+- setup flex container and align-items property logic for generated css -- this will mostly be a brute force approach that tries different container configurations until the images match up
 #### Thursday, November 1, 2018
-- Finish
-- Finish
+- Reconcile parent-sibling-child relationships between generated medium-and-large size html
+- start fine-tuned image detection of details less than 40px in size
 #### Friday, November 2, 2018
-- Finish
-- Finish
+- Fine tune detection of dominant patterns vs less sizeable patterns and prioritize the high contrast pattern elements (rgba values that are opposite on the color spectrum)
+- Generate smaller html and css
 #### Saturday, November 3, 2018
-- Finish
-- Finish
+- fiddle with css logic while sitting at the beach drinking coffee
 #### Sunday, November 4, 2018
-- Finish
-- Finish
+- test all main elements, identify issues that need to be fixed for the final demo version due Monday Nov 5.
+- Setup webpage on github show
 #### Monday, November 5, 2018
-- Finish
 - Finish
