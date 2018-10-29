@@ -25,4 +25,4 @@ Introducing `Image-to-Html`, a pixel-perfect webpage generator tool that convert
 - The grey button adjacent to the bold-bordered input field is a submit button.
     - Upon clicking the submit button, the two equally-sized boxes with identical internal components but different background shading will render the image that was input into the bold-bordered input box.
 - The equally sized boxes will render two different events. The box on the left will render the user-input-image as an html img component. The box on the left is an html5 canvas that will render the image as it is deconstructed into rgba coordinates and then reconstructed into an html page. 
-- The example page identified in the above wireframe is simply a clone of the site itself, such that it represents the event that a user had taken a screenshot of the webpage and asked the Image-to-Html generator to generate a facsimie of the site.
+- The example page identified in the above wireframe is simply a clone of the site itself, such that it represents the event that a user had taken a screenshot of the webpage and asked the Image-to-Html generator to generate a facsimile of the site.
