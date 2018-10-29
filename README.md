@@ -11,7 +11,7 @@ Introducing `Image-to-Html`, a pixel-perfect webpage generator tool that convert
 ## Functionality & MVP
 - Image-to-Html works by parsing an image file into a 2d array of pixels, then mapping extended color regions into html containers. 
     - `[ ]` The generator should be able to generate a website that has the same geometrical layout and proportions to the supplied image file.
-    - `[ ]` The generator follows an outermost-to-innermost logical pattern such that any geometrical regions of the supplied-image-file that have a plane of vectors of length and magnitude greater than
+    - `[ ]` The generator follows an outermost-to-innermost logical pattern such that any geometrical regions of the supplied-image-file having a plane that is larger than an overlapping plane is considered the parent-container.
 - Color regions that differ from surrounding color regions on any vector of the 2d rgba array are considered as possible borders between containers.
     - `[ ]` each geometrical region of the generated page should have the same rgba color values as the corresponding geometrical region of the supplied image file
 - Image-to-Html generates a series of possible [parent, sibling, child] container relationships for each design element that is located by rgba differentials, then assembles each set of container relationships to compare and contrast results for a best fit web page.
