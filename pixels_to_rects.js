@@ -5,31 +5,102 @@ function drawRects(imageInfo, height, width){
 
     let xVects = colorLinesOnXAxis(imageInfo, height, width);
     let yVects = colorLinesOnYAxis(imageInfo, height, width);
+    let mainXVects = filterColorLines(xVects, 0, width / 2, width)
+    let mainYVects = filterColorLines(yVects, 1, height / 2, height);
+
+    let mainXMatches = matchingColorLines(mainXVects, 0);
+    let mainYMatches = matchingColorLines(mainYVects, 1);
+
 
     let planeIntersects = {};
 
 
-    console.log("x", xVects);
-    console.log("y", yVects);
+    console.log("x", mainXMatches);
+    console.log("y", mainYMatches);
 }
 
-function filterColorLines(color_lines, axis_idx, minPx = 3, maxPx = null){
-    let keys = Object.keys(color_lines);
-    let new_lines = {};
-    for(let i = 0; i < keys.length; ++i){
-        let color = color_lines[keys[i]]
-        if (coordInRange(color.start[axis_idx], color.end[axis_idx], minPx, maxPx || color.end[axis_idx])) {
-          new_lines[keys[i]] = color;
+// axis_idx is either 0 or 1 --- 0 for x axis, 1 for y axis
+// colorLines is an array of hashes that hold start and end indices for a given line that has a given rgba value
+function matchingColorLines(colorLines, axis_idx){
+    let keys = Object.keys(colorLines)
+    let allMatches = [];
+    for(let k = 0; k < keys.length; ++k){
+
+        let mainKey = keys[k];
+        let matches = matchesForLine(colorLines, axis_idx, mainKey, keys.slice(k + 1)) // only check keys not checked
+        if (matches.length > 0) {                                                    // an array of matching lines
+            for(let m = 0; m < matches.length; ++m){ allMatches.push(matches[m]); }
+        }
+    } return allMatches;
+}
+
+// helper method for
+// returns all of the matching colorlines for a given colorline
+function matchesForLine(colorLines, axis_idx, mainKey, remainingKeys){
+    let matches = [];
+    let line = colorLines[mainKey];
+
+    for(let k = 0; k < remainingKeys.length; ++k){
+        let line2 = colorLines[remainingKeys[k]];
+        if (doLinesMatch(line, line2, axis_idx)) { // check if the lines are withing 2 px of each other's length
+             matches.push({ line1: line, line2: line2});
         }
     }
+
+    return matches;
 }
 
-function coordInRange(num1, num2, min, max){
-    let the_rng = Math.abs(num1 - num2);
+// returns a line that matches a subline
+// function subLineToLines(sub, lines, axis_idx){
+//     let matches = [];
+//     let subkeys = Object.keys(lines);
+//     for(let k = 0; k < subkeys.length; ++k){
+//         let lin = lines[subkeys[k]];
+//         if (doLinesMatch(sub, lin, axis_idx)) { // check if the lines are withing 2 px of each other's length
+//             matches.push({ line1: sub, line2: lin});
+//         }
+//     }
+//     return matches;
+// }
+
+
+
+function doLinesMatch(line1, line2, axis_idx) {                                   // determines if line1 and line2 could be part of same rect
+    return  coordInRange(line1.start[axis_idx], line2.start[axis_idx], 0,2) &&  // start matches up
+        coordInRange(line1.end[axis_idx], line2.end[axis_idx], 0, 2) &&         // end matches up
+        coordInRange(abs_range(line1.start[axis_idx], line1.end[axis_idx]),     // lengths match up
+            abs_range(line2.start[axis_idx], line2.end[axis_idx]),
+            0, 2)
+}
+
+
+function filterColorLines(color_lines, axis_idx, minPx, maxPx){
+    let keys = Object.keys(color_lines);
+    let new_lines = {};
+    for(let i = 0; i < keys.length; ++i){                  // the x or y axis position that the line is on
+        let sub_keys = Object.keys(color_lines[keys[i]]);  // the array of color_lines that are sub-lines of the x or y line axis in R2
+        let idx = keys[i];                                 // the x or y axis
+        for (let s = 0; s < sub_keys.length; ++s){
+            let sub = sub_keys[s]                          // the subset of the x or y axis
+            let color = color_lines[idx][sub]
+            if (coordInRange(color.start[axis_idx], color.end[axis_idx], minPx, maxPx)) {
+                new_lines[idx] = color;
+            }
+        }
+    }
+    return new_lines;
+}
+
+function abs_range(num1, num2){
+    return Math.abs(num1 - num2);
+}
+
+function coordInRange(num1, num2, min, max){                          // checks if a coord is >= min and <= max
+    let the_rng = abs_range(num1, num2);
     return the_rng >= min && the_rng <= max;
 }
 
-function colorLinesOnXAxis(imageInfo, height, width, x_offset = 0) {
+function colorLinesOnXAxis(imageInfo, height, width, x_offset = 0) { // gets an array of colors on a given line of the x axis for a given y value
     let contiguousXLines = {}
     for(let y = 0; y < height; ++y){ contiguousXLines[y] = leftToRight(imageInfo, y, width, x_offset) }
     return contiguousXLines;
@@ -41,8 +112,7 @@ function colorLinesOnYAxis(imageInfo, height, width, y_offset = 0) {
     return contiguousYLines;
 }
 
-// search by one px from 0 to width on x axis for a given y axis
-function leftToRight(imageInfo, y, width, x_offset = 0) {
+function leftToRight(imageInfo, y, width, x_offset = 0) { // search by one px from 0 to width on x axis for a given y axis
     let contiguousRegions = {};
     regionKey = 0;
     let prevColorMatch = false;
