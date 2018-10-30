@@ -9,9 +9,11 @@ function canvasAndContext(){
 } // get the context
 
 function appendImage(model_image){
+
    const myImage = document.getElementById("model-image");
    myImage.src = model_image;
    myImage.crossOrigin = "Anonymous"; //https://stackoverflow.com/questions/22097747/how-to-fix-getimagedata-error-the-canvas-has-been-tainted-by-cross-origin-data
+   
    return myImage;
 } // append an image to your html
 
@@ -28,15 +30,13 @@ function imageData(img) {
   canvas.height = imgHght;
 
   ctx.drawImage(img, 0, 0, imgWdth, imgHght);
-  return ctx.getImageData(0, 0, imgWdth, imgHght);
+  const imageInfo = {
+      canvas: canvas,
+      context: ctx, 
+      pixels: ctx.getImageData(0, 0, imgWdth, imgHght),
+      height: imgHght,
+      width: imgWdth
+    };
+
+    return imageInfo;
 } // get the image data from your image
-
-
-
-function rgbaAtImgCoordinate(ctx, x,y){
-    const pixel = ctx.getImageData(x, y, 1, 1);
-    const data = pixel.data;
-    const rgba = 'rgba(' + data[0] + ', ' + data[1] +
-        ', ' + data[2] + ', ' + (data[3] / 255) + ')';
-    return rgba;
-}
