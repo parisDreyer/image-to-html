@@ -19,8 +19,8 @@
             appendImage(imagePath).onload = () => {
                 const data = imageData(document.getElementById("model-image"));
                 let rects = possibleRects(data, data.height, data.width);
-                console.log(HTMLandCSSstrings(rects.xPlanes));
-                console.log(HTMLandCSSstrings(rects.yPlanes));
+                console.log(HTMLandCSSstrings(rects.xPlanes, data.width, data.height));
+                console.log(HTMLandCSSstrings(rects.yPlanes, data.width, data.height));
             }
         }
     </script>

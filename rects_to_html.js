@@ -1,17 +1,17 @@
-function HTMLandCSSstrings(bunch_of_rects){
+function HTMLandCSSstrings(bunch_of_rects, imgWidth, imgHeight){
     let htmlStr = [];
     let cssStr = [];
 
     for(let z = 0; z < bunch_of_rects.length; ++z){
         let box = bunch_of_rects[z];
         htmlStr.push(html_for_rect(box, z)); 
-        cssStr.push(css_for_rect(box, z));
+        cssStr.push(css_for_rect(box, z, imgWidth, imgHeight));
     }
 
     return { 'htmlStr': htmlStr.join(' '), 'cssStr': cssStr.join(' ') };
 }
 
-function css_for_rect(box, idx){
+function css_for_rect(box, idx, imgWidth, imgHeight){
     let x1 = box.line1.start[0];
     let x2 = box.line2.end[0];
     let y1 = box.line1.start[1];
@@ -19,17 +19,23 @@ function css_for_rect(box, idx){
     // console.log(box);
     let height = abs_dist(y1, y2);
     let width = abs_dist(x1, x2);
-    let minA = Math.sqrt(boxArea(height, width));
+    let heightPercent = Math.floor((height/ imgHeight) * 100);
+    let widthPercent = Math.floor((width / imgWidth) * 100);
+    // let minA = Math.sqrt(boxArea(height, width));
+    let relLeft = Math.floor((x1 / imgWidth) * 100);
+    let relTop = Math.floor((y1 / imgHeight) * 100);
+
     // for some reason xPlanes are getting assigned differently from yPlanes in pixels_to_rects.js ==== i need to debug but for now the css background property uses a tempfix
-    return `.box_${idx} { 
-        background: ${box.line1.rgba.rgba_string || box.line1.rgba};
-        height: ${height}px;
-        width: ${width}px;
-        min-height: ${minA}px;
-        min-width: ${minA}px;
-        left: ${x1}px;
-        top: ${y1}px;
-    }`;
+    return `.box_${idx} {` + 
+        `background: ${box.line1.rgba.rgba_string || box.line1.rgba}; ` +
+        `height: ${heightPercent}%; ` +
+        `width: ${widthPercent}%; ` +
+        `min-height: ${heightPercent}%; ` +
+        `min-width: ${widthPercent}%; ` +
+        `left: ${relLeft}%; ` +
+        `top: ${relTop}%; ` +
+        `position: absolute; ` +
+    `}`;
 }
 
 function html_for_rect(box, idx){
