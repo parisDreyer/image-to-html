@@ -1,6 +1,6 @@
 
 
-function drawRects(imageInfo, height, width){
+function possibleRects(imageInfo, height, width){
 
 
     let xVects = colorLinesOnXAxis(imageInfo, height, width);
@@ -11,12 +11,7 @@ function drawRects(imageInfo, height, width){
     let mainXMatches = matchingColorLines(mainXVects, 0);
     let mainYMatches = matchingColorLines(mainYVects, 1);
 
-
-    let planeIntersects = {};
-
-
-    console.log("x", mainXMatches);
-    console.log("y", mainYMatches);
+    return { xPlanes: mainXMatches, yPlanes: mainYMatches }
 }
 
 // axis_idx is either 0 or 1 --- 0 for x axis, 1 for y axis
@@ -50,19 +45,6 @@ function matchesForLine(colorLines, axis_idx, mainKey, remainingKeys){
     return matches;
 }
 
-// returns a line that matches a subline
-// function subLineToLines(sub, lines, axis_idx){
-//     let matches = [];
-//     let subkeys = Object.keys(lines);
-//     for(let k = 0; k < subkeys.length; ++k){
-//         let lin = lines[subkeys[k]];
-//         if (doLinesMatch(sub, lin, axis_idx)) { // check if the lines are withing 2 px of each other's length
-//             matches.push({ line1: sub, line2: lin});
-//         }
-//     }
-//     return matches;
-// }
-
 
 
 function doLinesMatch(line1, line2, axis_idx) {                                   // determines if line1 and line2 could be part of same rect
@@ -91,11 +73,11 @@ function filterColorLines(color_lines, axis_idx, minPx, maxPx){
     return new_lines;
 }
 
-function abs_range(num1, num2){
+function abs_range(num1, num2){                                   // saves a couple lines of code
     return Math.abs(num1 - num2);
 }
 
-function coordInRange(num1, num2, min, max){                          // checks if a coord is >= min and <= max
+function coordInRange(num1, num2, min, max){                     // checks if a coord is >= min and <= max
     let the_rng = abs_range(num1, num2);
     return the_rng >= min && the_rng <= max;
 }
@@ -157,6 +139,8 @@ function addOrUpdateContiguousLine(regionHash, color, x, y){
 }
 
 
+// gets the rgba color value for an x,y coordinate
+// this returns an object with the value for each red,green,blue,alpha, as well as a css string
 function rgbaAtImgCoordinate(ctx, x, y) {
     const pixel = ctx.getImageData(x, y, 1, 1);
     const data = pixel.data;
