@@ -48,11 +48,13 @@ function matchesForLine(colorLines, axis_idx, mainKey, remainingKeys){
 
 
 function doLinesMatch(line1, line2, axis_idx) {                                   // determines if line1 and line2 could be part of same rect
-    return  coordInRange(line1.start[axis_idx], line2.start[axis_idx], 0,2) &&  // start matches up
+    let in_range = coordInRange(line1.start[axis_idx], line2.start[axis_idx], 0,2) &&  // start matches up
         coordInRange(line1.end[axis_idx], line2.end[axis_idx], 0, 2) &&         // end matches up
         coordInRange(abs_range(line1.start[axis_idx], line1.end[axis_idx]),     // lengths match up
             abs_range(line2.start[axis_idx], line2.end[axis_idx]),
-            0, 2)
+            0, 2);
+    let colors_match = colorMatch(line1.rgba, line2.rgba, 2);                   // colors withing 2px of each other
+    return colors_match && in_range; 
 }
 
 
@@ -102,7 +104,7 @@ function leftToRight(imageInfo, y, width, x_offset = 0) { // search by one px fr
         let currColor = rgbaAtImgCoordinate(imageInfo.context, x, y);
         let nxtColor = rgbaAtImgCoordinate(imageInfo.context, x + 1, y);
 
-        contiguousRegions[regionKey] = addOrUpdateContiguousLine(contiguousRegions[regionKey], currColor.rgba_string, x, y);
+        contiguousRegions[regionKey] = addOrUpdateContiguousLine(contiguousRegions[regionKey], currColor, x, y); // removed currColor.rgba_string
         if(nxtColor && colorMatch(currColor, nxtColor, 2)) prevColorMatch = true; 
         else if (nxtColor && !prevColorMatch) regionKey += 1; // increment region key for new color range, because we have reached the end of a color-range-line
         
