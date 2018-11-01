@@ -2,6 +2,7 @@
 function possibleRects(data, canvas, ctx){
 
     let avgColor = getAverageRGB(data.data);
+    let topLeftColor = rgbaAtImgCoordinate(ctx, 0, 0);
     let allColors = getAllColors(data.data);
     console.log(allColors);
     // return getRects(canvas, ctx, avgColor);
@@ -13,11 +14,12 @@ function possibleRects(data, canvas, ctx){
           hex: allColors[i],
           regions: allRegionsForColor(
               cloneCanvasContext(canvas), 
-                currColor, canvas.height, canvas.width, avgColor
+                currColor, canvas.height, canvas.width, topLeftColor
             )
         }
+        console.log(colorRegions[i].regions.length);
     }
-    return colorRegions;
+    return Object.values(colorRegions).filter(obj => obj.regions.length > 0);
 }
 
 
@@ -47,94 +49,121 @@ function cloneCanvasContext(oldCanvas) {
 
 
 function allRegionsForColor(ctx, targetColor, height, width, nullColor){
-    console.log(targetColor);
+    // console.log(targetColor);
 
     let foundRegions = [];
-    while(true){
-        let x = 0; y = 0;
+        let p = 0;
         let cannotend = true;
-        while(x < width && cannotend){
-            while(y < height && cannotend){
-                if(colorMatch(rgbaAtImgCoordinate(ctx, x,y), targetColor)){
-                    cannotend = false;
-                    let res = floodSearch(ctx, targetColor, x,y, nullColor);
-                    ctx = res.context;
-                    let Xs = res.xs, Ys = res.ys;
-                    let resX = Xs.sort(), resY = Ys.sort();
-                    let xmin = resX[0], ymin = resY[0];
-                    let xmax = resX[resX.length - 1], ymax= resY[resY.length - 1];
-                    if(xmin < xmax || ymin < ymax)
-                    foundRegions.push({ start: [xmin, ymin], end: [xmax,ymax] });
-                    
-                }
-                y++;
+        while(cannotend){
+            if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor)){
+                cannotend = false;
+
+                // search converging sections of the image from each corner
+                // top left
+                let res = searchPointByRegion(ctx, targetColor, p, p, nullColor, width, height);
+                if(res.start && res.end) foundRegions.push({start: res.start, end: res.end})
+                ctx = res.context;
+                // top right
+                res = searchPointByRegion(ctx, targetColor, width - p, p, nullColor, width, height);
+                if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
+                ctx = res.context;
+                // bottom left
+                res = searchPointByRegion(ctx, targetColor, p, height - p, nullColor, width, height);
+                if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
+                ctx = res.context;
+                // bottom right
+                res = searchPointByRegion(ctx, targetColor, width - p, height - p, nullColor, width, height);
+                if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
+                ctx = res.context;
             }
-            x++;
+            p+=10;//++;
+            if (p >= width || p >= height) break;
         }
-        if (x >= width && y >= height) break;
-    }
-    return foundRegions;
+        return foundRegions;
 }
+
+function searchPointByRegion(ctx, targetColor, p, nullColor, width, height){
+    let res = floodSearch(ctx, targetColor, p, p, nullColor, width, height);
+    ctx = res.context;
+    let Xs = res.xs, Ys = res.ys;
+    let resX = Xs.sort(), resY = Ys.sort();
+    let xmin = resX[0], ymin = resY[0];
+    let xmax = resX[resX.length - 1], ymax = resY[resY.length - 1];
+
+    if (xmin != xmax && ymin != ymax) return { start: [xmin, ymin], end: [xmax, ymax], context: ctx };
+    else return { start: false, end: false, context: ctx };
+}
+
 
 
 
 // addapted from pseudocode at
 // https://stackoverflow.com/questions/21865922/non-recursive-implementation-of-flood-fill-algorithm
-function floodSearch(ctx, target_color, x, y, nullColor) {
+function floodSearch(ctx, target_color, x, y, nullColor, width, height) {
     let Xs = [], Ys = [];
 
     let stack = []; // stack is dfs, queue is bfs
     stack.push([x,y]);
+    let alreadySeen = [[x,y]];
     while(stack.length > 0){
         let coord = stack.pop();
-        if (colorMatch(rgbaAtImgCoordinate(ctx, coord[0], coord[1]), target_color)) {
+        let nxtColor = rgbaAtImgCoordinate(ctx, coord[0], coord[1]);
+
+        if (nxtColor && colorMatch(nxtColor, target_color), 6) {
             colorCTX(ctx, coord[0], coord[1], nullColor);
             Xs = Xs.sort();
+            Ys = Ys.sort();
             Xs.length > 2 ? Xs[1] = coord[0] : Xs.push(coord[0]);
             Ys.length > 3 ? Ys[-1] = coord[1] : Ys.push(coord[1]);
-            let lstX = Xs[Xs.length - 1];
-            let lstY = Ys[Ys.length - 1]; // the bottom right y
-            if (!pointInRect(Xs[0], Ys[0], lstX, Ys[0], Xs[0], lstY, lstX, lstY, coord[0] - 1, coord[1]))
-                stack.push([coord[0]-1, coord[1]]);
-            if (!pointInRect(Xs[0], Ys[0], lstX, Ys[0], Xs[0], lstY, lstX, lstY, coord[0] + 1, coord[1]))
-                stack.push([coord[0]+1, coord[1]]);
-            if (!pointInRect(Xs[0], Ys[0], lstX, Ys[0], Xs[0], lstY, lstX, lstY, coord[0], coord[1] - 1))
-                stack.push([coord[0], coord[1]-1]);
-            if (!pointInRect(Xs[0], Ys[0], lstX, Ys[0], Xs[0], lstY, lstX, lstY, coord[0], coord[1] + 1))
-                stack.push([coord[0], coord[1]+1]);
+            let minX = comprsn(Xs[0], Xs.length > 1 ? Xs[1] : Xs[0], false);
+            let minY = comprsn(Ys[0], Ys.length > 1 ? Ys[1] : Ys[0], false);
+            let lstX = comprsn(Xs[-1], Xs[Xs.length - 1]) || Xs[0];
+            let lstY = comprsn(Ys[-1], Ys[Ys.length - 1]) || Ys[0]; // the bottom right y
+
+            if (!arrHasCoord(alreadySeen, [minX - 3, minY]) && minX > 3) {
+                
+                stack.push([minX-3, minY]);
+                alreadySeen.push([minX-3, minY]);
+            }
+            if (!arrHasCoord(alreadySeen, [lstX + 3, minY]) && lstX < width - 3) {
+                
+                stack.push([lstX+3, minY]);
+                alreadySeen.push([lstX + 3, minY]);
+            }
+            if (!arrHasCoord(alreadySeen, [minX, minY - 3]) && minY > 3) {
+                
+                stack.push([minX, minY - 3]);
+                alreadySeen.push([minX, minY - 3]);
+            }
+            if (!arrHasCoord(alreadySeen, [lstX, lstY + 3]) && lstY < height - 3) {
+                
+                stack.push([lstX, lstY + 3]);
+                alreadySeen.push([lstX, lstY + 3]);
+            }
+   
+            if (lstX >= width && lstY >= height) return { xs: [minX, lstX], ys: [minY, lstY], context: ctx};
+            console.log(minX, lstX);
         }
 
+        
     }
     return { xs: Xs, ys: Ys, context: ctx };
 }
 
+function arrHasCoord(arr, coord){
+    for (let i = 0; i < arr.length; ++i) {
+        let crd = arr[i];
+        if (crd[0] === coord[0] && crd[1] === coord[1]) return true;
+    } return false;
+}
 
-// https://www.geeksforgeeks.org/check-whether-given-point-lies-inside-rectangle-not/
-    // A utility function to calculate area 
-    // of triangle formed by (x1, y1),  
-    // (x2, y2) and (x3, y3) 
-    function area( x1,  y1,  x2,  y2,  x3,  y3) { 
-        return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0); 
-    } 
-          
-    // A function to check whether point P(x, y)  
-    // lies inside the rectangle formed by A(x1, y1),  
-    // B(x2, y2), C(x3, y3) and D(x4, y4)  
-function pointInRect(x1, y1, x2, y2, x3, y3, x4, y4, x, y) {          
-        // Calculate area of rectangle ABCD  
-        let A = area(x1, y1, x2, y2, x3, y3) + area(x1, y1, x4, y4, x3, y3); 
-        // Calculate area of triangle PAB  
-        let A1 = area(x, y, x1, y1, x2, y2); 
-        // Calculate area of triangle PBC  
-        let A2 = area(x, y, x2, y2, x3, y3); 
-        // Calculate area of triangle PCD  
-        let A3 = area(x, y, x3, y3, x4, y4);  
-        // Calculate area of triangle PAD 
-        let A4 = area(x, y, x1, y1, x4, y4); 
-        // Check if sum of A1, A2, A3   
-        // and A4is same as A  
-        return (A == A1 + A2 + A3 + A4); 
-    } 
+
+function comprsn(num1, num2, greatest = true){
+    if (greatest)
+        return num1 > num2 ? num1 : num2;
+    else
+        return num1 > num2 ? num2 : num1;
+}
 
 
 
@@ -228,3 +257,32 @@ function colorMatch(rgba1, rgba2, rgbaAllowedDelta = 5) {
         // Math.abs(rgba1.alpha - rgba2.alpha) <= rgbaAllowedDelta
         );
 }
+
+
+
+// https://www.geeksforgeeks.org/check-whether-given-point-lies-inside-rectangle-not/
+    // A utility function to calculate area 
+    // of triangle formed by (x1, y1),   
+    // (x2, y2) and (x3, y3) 
+//     function area( x1,  y1,  x2,  y2,  x3,  y3) { 
+//         return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0); 
+//     } 
+
+//     // A function to check whether point P(x, y)  
+//     // lies inside the rectangle formed by A(x1, y1),  
+//     // B(x2, y2), C(x3, y3) and D(x4, y4)  
+// function pointInRect(x1, y1, x2, y2, x3, y3, x4, y4, x, y) {          
+//         // Calculate area of rectangle ABCD  
+//         let A = area(x1, y1, x2, y2, x3, y3) + area(x1, y1, x4, y4, x3, y3); 
+//         // Calculate area of triangle PAB  
+//         let A1 = area(x, y, x1, y1, x2, y2); 
+//         // Calculate area of triangle PBC  
+//         let A2 = area(x, y, x2, y2, x3, y3); 
+//         // Calculate area of triangle PCD  
+//         let A3 = area(x, y, x3, y3, x4, y4);  
+//         // Calculate area of triangle PAD 
+//         let A4 = area(x, y, x1, y1, x4, y4); 
+//         // Check if sum of A1, A2, A3   
+//         // and A4is same as A  
+//         return (A == A1 + A2 + A3 + A4); 
+//     } 
