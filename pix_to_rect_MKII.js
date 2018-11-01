@@ -5,7 +5,7 @@ function possibleRects(data, canvas, ctx){
     let topLeftColor = rgbaAtImgCoordinate(ctx, 0, 0);
     let allColors = getAllColors(data.data);
     console.log(allColors);
-    // return getRects(canvas, ctx, avgColor);
+
     let colorRegions = {};
 
     for(let i = 0; i < allColors.length; ++i){
@@ -17,7 +17,6 @@ function possibleRects(data, canvas, ctx){
                 currColor, canvas.height, canvas.width, topLeftColor
             )
         }
-        console.log(colorRegions[i].regions.length);
     }
     return Object.values(colorRegions).filter(obj => obj.regions.length > 0);
 }
@@ -142,7 +141,7 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height) {
             }
    
             if (lstX >= width && lstY >= height) return { xs: [minX, lstX], ys: [minY, lstY], context: ctx};
-            console.log(minX, lstX);
+            // console.log(minX, lstX);
         }
 
         

@@ -6,7 +6,7 @@
 <body>
     <script src="./img_to_pixel.js"></script>
     <script src="pix_to_rect_MKII.js"></script>
-    <script src="./rects_to_html.js"></script>
+    <script src="./rects_to_html_MKII.js"></script>
     <img id="model-image" src="" width="auto" height="auto"/>
     <canvas id="canvas", width="300" height="400" style="border:1px solid #000"></canvas>
 
@@ -21,7 +21,7 @@
                 const data = imageData(document.getElementById("model-image"));
                 // let rects = possibleRects(data, data.height, data.width);
                 let rects = possibleRects(data.pixels, data.canvas, data.context);
-                // let html_and_css = HTMLandCSSstrings(rects.xPlanes, data.width, data.height);
+                let html_and_css = HTMLandCSSstrings(rects, data.width, data.height);
                 
                 
                 // let myWindow = window.open("data:text/html," + encodeURIComponent(html_and_css['htmlStr']),
@@ -31,7 +31,7 @@
                 // html_and_css['cssStr'];
                 // console.log(html_and_css);
 
-                console.log(rects);
+                console.log(html_and_css);
             }
         }
     </script>
