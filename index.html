@@ -19,17 +19,17 @@
             
             appendImage(imagePath).onload = () => {
                 const data = imageData(document.getElementById("model-image"));
-                // let rects = possibleRects(data, data.height, data.width);
                 let rects = possibleRects(data.pixels, data.canvas, data.context);
+                console.log(rects);
+
+
                 let html_and_css = HTMLandCSSstrings(rects, data.width, data.height);
                 
-                
-                // let myWindow = window.open("data:text/html," + encodeURIComponent(html_and_css['htmlStr']),
-                //     "_blank", "width=auto,height=auto");
-                // let myWindow = window.open("data:text/html," + encodeURIComponent(html_and_css['htmlStr']),
-                //     "_blank", "width=auto,height=auto");
-                // html_and_css['cssStr'];
-                // console.log(html_and_css);
+                // open a window to display html and css text
+                let myWindow1 = window.open();
+                myWindow1.document.write(`<head><title>Generated CSS</title><style>${html_and_css.cssStr}</style></head>`);
+                myWindow1.document.write(html_and_css.htmlStr);
+                //let myWindow2 = window.open().document.write(html_and_css.cssStr);
 
                 console.log(html_and_css);
             }

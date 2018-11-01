@@ -8,13 +8,14 @@ function possibleRects(data, canvas, ctx){
 
     let colorRegions = {};
 
+
     for(let i = 0; i < allColors.length; ++i){
         let currColor = hexToRgb(allColors[i]);
         colorRegions[i] = {
           hex: allColors[i],
           regions: allRegionsForColor(
               cloneCanvasContext(canvas), 
-                currColor, canvas.height, canvas.width, topLeftColor
+                currColor, canvas.height, canvas.width, topLeftColor, 7
             )
         }
     }
@@ -47,42 +48,38 @@ function cloneCanvasContext(oldCanvas) {
 
 
 
-function allRegionsForColor(ctx, targetColor, height, width, nullColor){
+function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_size = 4){
     // console.log(targetColor);
 
     let foundRegions = [];
-        let p = 0;
-        let cannotend = true;
-        while(cannotend){
-            if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor)){
-                cannotend = false;
-
+    let p = 0;
+    while (p < width && p < height){
+            if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor, sweep_size)){
                 // search converging sections of the image from each corner
                 // top left
-                let res = searchPointByRegion(ctx, targetColor, p, p, nullColor, width, height);
+                let res = searchPointByRegion(ctx, targetColor, p, p, nullColor, width, height, sweep_size);
                 if(res.start && res.end) foundRegions.push({start: res.start, end: res.end})
                 ctx = res.context;
                 // top right
-                res = searchPointByRegion(ctx, targetColor, width - p, p, nullColor, width, height);
+                res = searchPointByRegion(ctx, targetColor, width - p, p, nullColor, width, height, sweep_size);
                 if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
                 ctx = res.context;
                 // bottom left
-                res = searchPointByRegion(ctx, targetColor, p, height - p, nullColor, width, height);
+                res = searchPointByRegion(ctx, targetColor, p, height - p, nullColor, width, height, sweep_size);
                 if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
                 ctx = res.context;
                 // bottom right
-                res = searchPointByRegion(ctx, targetColor, width - p, height - p, nullColor, width, height);
+                res = searchPointByRegion(ctx, targetColor, width - p, height - p, nullColor, width, height, sweep_size);
                 if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
                 ctx = res.context;
             }
-            p+=10;//++;
-            if (p >= width || p >= height) break;
+            p += sweep_size;//++;
         }
         return foundRegions;
 }
 
-function searchPointByRegion(ctx, targetColor, p, nullColor, width, height){
-    let res = floodSearch(ctx, targetColor, p, p, nullColor, width, height);
+function searchPointByRegion(ctx, targetColor, p, nullColor, width, height, sweep_size){
+    let res = floodSearch(ctx, targetColor, p, p, nullColor, width, height, sweep_size);
     ctx = res.context;
     let Xs = res.xs, Ys = res.ys;
     let resX = Xs.sort(), resY = Ys.sort();
@@ -98,8 +95,8 @@ function searchPointByRegion(ctx, targetColor, p, nullColor, width, height){
 
 // addapted from pseudocode at
 // https://stackoverflow.com/questions/21865922/non-recursive-implementation-of-flood-fill-algorithm
-function floodSearch(ctx, target_color, x, y, nullColor, width, height) {
-    let Xs = [], Ys = [];
+function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_size = 3) {
+    let Xs = [], Ys = []; // the best fit return values
 
     let stack = []; // stack is dfs, queue is bfs
     stack.push([x,y]);
@@ -108,40 +105,61 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height) {
         let coord = stack.pop();
         let nxtColor = rgbaAtImgCoordinate(ctx, coord[0], coord[1]);
 
-        if (nxtColor && colorMatch(nxtColor, target_color), 6) {
+        if (nxtColor && colorMatch(nxtColor, target_color), sweep_size) {
             colorCTX(ctx, coord[0], coord[1], nullColor);
             Xs = Xs.sort();
             Ys = Ys.sort();
-            Xs.length > 2 ? Xs[1] = coord[0] : Xs.push(coord[0]);
-            Ys.length > 3 ? Ys[-1] = coord[1] : Ys.push(coord[1]);
+            Xs.length > 3 ? Xs[1] = coord[0] : Xs.push(coord[0]);
+            Ys.length > 4 ? Ys[-1] = coord[1] : Ys.push(coord[1]);
             let minX = comprsn(Xs[0], Xs.length > 1 ? Xs[1] : Xs[0], false);
             let minY = comprsn(Ys[0], Ys.length > 1 ? Ys[1] : Ys[0], false);
-            let lstX = comprsn(Xs[-1], Xs[Xs.length - 1]) || Xs[0];
-            let lstY = comprsn(Ys[-1], Ys[Ys.length - 1]) || Ys[0]; // the bottom right y
+            let lstX = Xs[-1] ? comprsn(Xs[-1], Xs[Xs.length - 1]) : Xs[0];
+            let lstY = Ys[-1] ? comprsn(Ys[-1], Ys[Ys.length - 1]) : Ys[0]; // the bottom right y
 
-            if (!arrHasCoord(alreadySeen, [minX - 3, minY]) && minX > 3) {
-                
-                stack.push([minX-3, minY]);
-                alreadySeen.push([minX-3, minY]);
+            // grow search area from currently described rect in 8 Directions
+
+            // upper left left
+            if (!arrHasCoord(alreadySeen, [minX - sweep_size, minY]) && minX > sweep_size) {
+                stack.push([minX-sweep_size, minY]);
+                alreadySeen.push([minX-sweep_size, minY]);
             }
-            if (!arrHasCoord(alreadySeen, [lstX + 3, minY]) && lstX < width - 3) {
-                
-                stack.push([lstX+3, minY]);
-                alreadySeen.push([lstX + 3, minY]);
+            // upper right right
+            if (!arrHasCoord(alreadySeen, [lstX + sweep_size, minY]) && lstX < width - sweep_size) {
+                stack.push([lstX+sweep_size, minY]);
+                alreadySeen.push([lstX + sweep_size, minY]);
             }
-            if (!arrHasCoord(alreadySeen, [minX, minY - 3]) && minY > 3) {
-                
-                stack.push([minX, minY - 3]);
-                alreadySeen.push([minX, minY - 3]);
+            // upper right up
+            if (!arrHasCoord(alreadySeen, [lstX, minY - sweep_size]) && minY > sweep_size) {
+                stack.push([lstX, minY - sweep_size]);
+                alreadySeen.push([lstX, minY - sweep_size]);
             }
-            if (!arrHasCoord(alreadySeen, [lstX, lstY + 3]) && lstY < height - 3) {
-                
-                stack.push([lstX, lstY + 3]);
-                alreadySeen.push([lstX, lstY + 3]);
+            // upper left up
+            if (!arrHasCoord(alreadySeen, [minX, minY - sweep_size]) && minY > sweep_size) {
+                stack.push([minX, minY - sweep_size]);
+                alreadySeen.push([minX, minY - sweep_size]);
+            }
+            // lower right lower
+            if (!arrHasCoord(alreadySeen, [lstX, lstY + sweep_size]) && lstY < height - sweep_size) {
+                stack.push([lstX, lstY + sweep_size]);
+                alreadySeen.push([lstX, lstY + sweep_size]);
+            }
+            // lower right right
+            if (!arrHasCoord(alreadySeen, [lstX + sweep_size, lstY]) &&  lstX < width - sweep_size && lstY < height - sweep_size) {
+                stack.push([lstX + sweep_size, lstY]);
+                alreadySeen.push([lstX, lstY + sweep_size]);
+            }
+            // lower left left
+            if (!arrHasCoord(alreadySeen, [minX - sweep_size, lstY]) && minX > sweep_size&& lstY < height) {
+                stack.push([minX - sweep_size, lstY]);
+                alreadySeen.push([minX - sweep_size, lstY]);
+            }
+            // lower left lower
+            if (!arrHasCoord(alreadySeen, [minX, lstY + sweep_size]) && minX > 0 && lstY < height - sweep_size) {
+                stack.push([minX, lstY + sweep_size]);
+                alreadySeen.push([minX, lstY + sweep_size]);
             }
    
             if (lstX >= width && lstY >= height) return { xs: [minX, lstX], ys: [minY, lstY], context: ctx};
-            // console.log(minX, lstX);
         }
 
         

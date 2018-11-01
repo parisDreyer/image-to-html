@@ -19,26 +19,23 @@ function css_for_rect(hex, region, id, imgWidth, imgHeight) {
     let x2 = region.end[0];
     let y1 = region.start[1];
     let y2 = region.end[1];
-    // console.log(box);
     let height = abs_dist(y1, y2);
-    if (height == 0) height += 0.1;
+    if (height === 0) height += 0.1;
     let width = abs_dist(x1, x2);
-    if (width == 0) width += 0.1;
-    let heightPercent = (height / imgHeight) * 100;
-    let widthPercent = (width / imgWidth) * 100;
-    // let minA = Math.sqrt(boxArea(height, width));
-    let relLeft = Math.floor((x1 / imgWidth) * 100);
-    let relTop = Math.floor((y1 / imgHeight) * 100);
+    if (width === 0) width += 0.1;
+    // let heightPercent = (height / imgHeight) * 100;
+    // let widthPercent = (width / imgWidth) * 100;
+    // let relLeft = Math.floor((x1 / imgWidth) * 100);
+    // let relTop = Math.floor((y1 / imgHeight) * 100);
 
-    // for some reason xPlanes are getting assigned differently from yPlanes in pixels_to_rects.js ==== i need to debug but for now the css background property uses a tempfix
     return `.box_${id} {` +
         `background: ${hex}; ` +
-        `height: ${heightPercent}%; ` +
-        `width: ${widthPercent}%; ` +
-        `min-height: ${heightPercent}%; ` +
-        `min-width: ${widthPercent}%; ` +
-        `left: ${relLeft}%; ` +
-        `top: ${relTop}%; ` +
+        `height: ${height}px; ` +
+        `width: ${width}px; ` +
+        `min-height: ${height}px; ` +
+        `min-width: ${width}px; ` +
+        `left: ${x1}px; ` +
+        `top: ${y1}px; ` +
         `position: absolute; ` +
         `}`;
 }
