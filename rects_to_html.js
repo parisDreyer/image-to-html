@@ -18,9 +18,11 @@ function css_for_rect(box, idx, imgWidth, imgHeight){
     let y2 = box.line2.end[1];
     // console.log(box);
     let height = abs_dist(y1, y2);
+    if (height == 0) height += 0.1;
     let width = abs_dist(x1, x2);
-    let heightPercent = Math.floor((height/ imgHeight) * 100);
-    let widthPercent = Math.floor((width / imgWidth) * 100);
+    if (width == 0) width += 0.1;
+    let heightPercent = (height / imgHeight) * 100;
+    let widthPercent = (width / imgWidth) * 100;
     // let minA = Math.sqrt(boxArea(height, width));
     let relLeft = Math.floor((x1 / imgWidth) * 100);
     let relTop = Math.floor((y1 / imgHeight) * 100);

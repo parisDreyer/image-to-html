@@ -5,22 +5,33 @@
 </head>
 <body>
     <script src="./img_to_pixel.js"></script>
-    <script src="./pixels_to_rects.js"></script>
+    <script src="pix_to_rect_MKII.js"></script>
     <script src="./rects_to_html.js"></script>
     <img id="model-image" src="" width="auto" height="auto"/>
     <canvas id="canvas", width="300" height="400" style="border:1px solid #000"></canvas>
 
     <input id="image-path" type="text" placeholder="img source path" />
     <button onClick="logImageData()">Analyze Img</button>
+    <div id="clips"></div>
     <script>
         function logImageData() {
             const imagePath = document.getElementById("image-path").value;
             
             appendImage(imagePath).onload = () => {
                 const data = imageData(document.getElementById("model-image"));
-                let rects = possibleRects(data, data.height, data.width);
-                console.log(HTMLandCSSstrings(rects.xPlanes, data.width, data.height));
-                console.log(HTMLandCSSstrings(rects.yPlanes, data.width, data.height));
+                // let rects = possibleRects(data, data.height, data.width);
+                let rects = possibleRects(data.pixels, data.canvas, data.context);
+                // let html_and_css = HTMLandCSSstrings(rects.xPlanes, data.width, data.height);
+                
+                
+                // let myWindow = window.open("data:text/html," + encodeURIComponent(html_and_css['htmlStr']),
+                //     "_blank", "width=auto,height=auto");
+                // let myWindow = window.open("data:text/html," + encodeURIComponent(html_and_css['htmlStr']),
+                //     "_blank", "width=auto,height=auto");
+                // html_and_css['cssStr'];
+                // console.log(html_and_css);
+
+                console.log(rects);
             }
         }
     </script>
