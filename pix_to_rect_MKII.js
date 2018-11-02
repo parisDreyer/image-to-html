@@ -1,13 +1,13 @@
 
-function possibleRects(data, canvas, ctx){
+function possibleRects(data, canvas, ctx, pivot_size, color_variability){
 
     let avgColor = getAverageRGB(data.data);
     let topLeftColor = rgbaAtImgCoordinate(ctx, 0, 0);
     let allColors = getAllColors(data.data);
+    let nullColor = { red: 255, blue: 255, green: 255 };
     console.log(allColors);
 
     let colorRegions = {};
-
 
     for(let i = 0; i < allColors.length; ++i){
         let currColor = hexToRgb(allColors[i]);
@@ -15,7 +15,7 @@ function possibleRects(data, canvas, ctx){
           hex: allColors[i],
           regions: allRegionsForColor(
               cloneCanvasContext(canvas), 
-                currColor, canvas.height, canvas.width, topLeftColor, 7
+                currColor, canvas.height, canvas.width, avgColor, pivot_size, color_variability
             )
         }
     }
@@ -48,38 +48,58 @@ function cloneCanvasContext(oldCanvas) {
 
 
 
-function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_size = 4){
-    // console.log(targetColor);
+function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_size, color_variability){
 
+    // console.log(targetColor);
+    let res;
     let foundRegions = [];
     let p = 0;
-    while (p < width && p < height){
-            if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor, sweep_size)){
-                // search converging sections of the image from each corner
-                // top left
-                let res = searchPointByRegion(ctx, targetColor, p, p, nullColor, width, height, sweep_size);
-                if(res.start && res.end) foundRegions.push({start: res.start, end: res.end})
-                ctx = res.context;
-                // top right
-                res = searchPointByRegion(ctx, targetColor, width - p, p, nullColor, width, height, sweep_size);
-                if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
-                ctx = res.context;
-                // bottom left
-                res = searchPointByRegion(ctx, targetColor, p, height - p, nullColor, width, height, sweep_size);
-                if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
-                ctx = res.context;
-                // bottom right
-                res = searchPointByRegion(ctx, targetColor, width - p, height - p, nullColor, width, height, sweep_size);
-                if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end })
-                ctx = res.context;
-            }
-            p += sweep_size;//++;
+    let midW = width / 2
+    let midH = height / 2
+    while (p <= midW && p <= midH) {// search converging sections of the image from each corner
+        if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor, color_variability)){ // top left
+            res = searchPointByRegion(ctx, targetColor, p, p, nullColor, width, height, sweep_size, color_variability);
+            if(res.start && res.end) foundRegions.push({start: res.start, end: res.end});
+            ctx = res.context;
+        } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, p), targetColor, color_variability)) { // top right
+            res = searchPointByRegion(ctx, targetColor, width - p, p, nullColor, width, height, sweep_size, color_variability);
+            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            ctx = res.context;
+        } if (colorMatch(rgbaAtImgCoordinate(ctx, p, height - p), targetColor, color_variability)){ // bottom left
+            res = searchPointByRegion(ctx, targetColor, p, height - p, nullColor, width, height, sweep_size, color_variability);
+            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            ctx = res.context;
+        } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, height - p), targetColor, color_variability)) { // bottom right
+            res = searchPointByRegion(ctx, targetColor, width - p, height - p, nullColor, width, height, sweep_size, color_variability);
+            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            ctx = res.context;
         }
-        return foundRegions;
+
+
+        if (colorMatch(rgbaAtImgCoordinate(ctx, midW, p), targetColor, color_variability)) { // mid top
+            res = searchPointByRegion(ctx, targetColor, midW, p, nullColor, width, height, sweep_size, color_variability);
+            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            ctx = res.context;
+        } if (colorMatch(rgbaAtImgCoordinate(ctx, midW, height - p), targetColor, color_variability)) { // mid bottom
+            res = searchPointByRegion(ctx, targetColor, midW, height - p, nullColor, width, height, sweep_size, color_variability);
+            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            ctx = res.context;
+        } if (colorMatch(rgbaAtImgCoordinate(ctx, p, midH), targetColor, color_variability)) { // left mid
+            res = searchPointByRegion(ctx, targetColor, p, midH, nullColor, width, height, sweep_size, color_variability);
+            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            ctx = res.context;
+        } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, midH), targetColor, color_variability)) { // right mid
+            res = searchPointByRegion(ctx, targetColor, width - p, midH, nullColor, width, height, sweep_size, color_variability);
+            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            ctx = res.context;
+        }
+        p += sweep_size;//++;
+    }
+    return foundRegions;
 }
 
-function searchPointByRegion(ctx, targetColor, p, nullColor, width, height, sweep_size){
-    let res = floodSearch(ctx, targetColor, p, p, nullColor, width, height, sweep_size);
+function searchPointByRegion(ctx, targetColor, p, nullColor, width, height, sweep_size, color_variability){
+    let res = floodSearch(ctx, targetColor, p, p, nullColor, width, height, sweep_size, color_variability);
     ctx = res.context;
     let Xs = res.xs, Ys = res.ys;
     let resX = Xs.sort(), resY = Ys.sort();
@@ -95,7 +115,7 @@ function searchPointByRegion(ctx, targetColor, p, nullColor, width, height, swee
 
 // addapted from pseudocode at
 // https://stackoverflow.com/questions/21865922/non-recursive-implementation-of-flood-fill-algorithm
-function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_size = 3) {
+function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_size, color_variability) {
     let Xs = [], Ys = []; // the best fit return values
 
     let stack = []; // stack is dfs, queue is bfs
@@ -105,7 +125,7 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
         let coord = stack.pop();
         let nxtColor = rgbaAtImgCoordinate(ctx, coord[0], coord[1]);
 
-        if (nxtColor && colorMatch(nxtColor, target_color), sweep_size) {
+        if (nxtColor && colorMatch(nxtColor, target_color), color_variability) {
             colorCTX(ctx, coord[0], coord[1], nullColor);
             Xs = Xs.sort();
             Ys = Ys.sort();

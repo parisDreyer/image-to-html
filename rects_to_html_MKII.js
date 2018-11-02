@@ -23,19 +23,19 @@ function css_for_rect(hex, region, id, imgWidth, imgHeight) {
     if (height === 0) height += 0.1;
     let width = abs_dist(x1, x2);
     if (width === 0) width += 0.1;
-    // let heightPercent = (height / imgHeight) * 100;
-    // let widthPercent = (width / imgWidth) * 100;
-    // let relLeft = Math.floor((x1 / imgWidth) * 100);
-    // let relTop = Math.floor((y1 / imgHeight) * 100);
+    let heightPercent = (height / imgHeight) * 100;
+    let widthPercent = (width / imgWidth) * 100;
+    let relLeft = Math.floor((x1 / imgWidth) * 100);
+    let relTop = Math.floor((y1 / imgHeight) * 100);
 
     return `.box_${id} {` +
         `background: ${hex}; ` +
-        `height: ${height}px; ` +
-        `width: ${width}px; ` +
-        `min-height: ${height}px; ` +
-        `min-width: ${width}px; ` +
-        `left: ${x1}px; ` +
-        `top: ${y1}px; ` +
+        `height: ${heightPercent}%; ` +
+        `width: ${widthPercent}%; ` +
+        `min-height: ${heightPercent}%; ` +
+        `min-width: ${widthPercent}%; ` +
+        `left: ${relLeft}%; ` +
+        `top: ${relTop}%; ` +
         `position: absolute; ` +
         `}`;
 }

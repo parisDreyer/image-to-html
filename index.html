@@ -9,27 +9,44 @@
     <script src="./rects_to_html_MKII.js"></script>
     <img id="model-image" src="" width="auto" height="auto"/>
     <canvas id="canvas", width="300" height="400" style="border:1px solid #000"></canvas>
-
-    <input id="image-path" type="text" placeholder="img source path" />
+    <br />
+    <label>
+        Pivot-Size (i.e. the number of pixels skipped when scanning)
+        <input id="scanning-pivot-size" type="integer" placeholder="32">
+    </label>
+    <br/>
+    <label>
+        Color Variability (i.e. the flexibility of a pixel match when scanning)
+        <input id="color-variability" type="integer" placeholder="5">
+    </label>
+    <br/>
+    <label>
+        Image file-path
+        <input id="image-path" type="text" placeholder="img source path" />
+    </label>
+    <br/>
     <button onClick="logImageData()">Analyze Img</button>
     <div id="clips"></div>
     <script>
         function logImageData() {
-            const imagePath = document.getElementById("image-path").value;
+            const imagePath = document.getElementById("image-path").value || "template_examples/template1.png";
             
             appendImage(imagePath).onload = () => {
                 const data = imageData(document.getElementById("model-image"));
-                let rects = possibleRects(data.pixels, data.canvas, data.context);
+
+                let pivot_size = document.getElementById("scanning-pivot-size").value || "8";
+                let color_variability = document.getElementById("color-variability").value || "12";
+
+                let rects = possibleRects(data.pixels, data.canvas, data.context, parseFloat(pivot_size), parseFloat(color_variability));
                 console.log(rects);
 
 
                 let html_and_css = HTMLandCSSstrings(rects, data.width, data.height);
                 
                 // open a window to display html and css text
-                let myWindow1 = window.open();
-                myWindow1.document.write(`<head><title>Generated CSS</title><style>${html_and_css.cssStr}</style></head>`);
-                myWindow1.document.write(html_and_css.htmlStr);
-                //let myWindow2 = window.open().document.write(html_and_css.cssStr);
+                let autoGenWindowDisplay = window.open();
+                autoGenWindowDisplay.document.write(`<head><title>Generated CSS</title><style>${html_and_css.cssStr}</style></head>`);
+                autoGenWindowDisplay.document.write(html_and_css.htmlStr);
 
                 console.log(html_and_css);
             }
