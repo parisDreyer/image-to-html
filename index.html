@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+    <Link rel="stylesheet" type="text/css" href="./index_styles.css">
 </head>
 <body>
     <script src="./img_to_pixel.js"></script>
     <script src="pix_to_rect_MKII.js"></script>
     <script src="./rects_to_html_MKII.js"></script>
-    <img id="model-image" src="" width="auto" height="auto"/>
-    <canvas id="canvas", width="300" height="400" style="border:1px solid #000"></canvas>
-    <br />
-    <label>
-        Pivot-Size (i.e. the number of pixels skipped when scanning)
-        <input id="scanning-pivot-size" type="integer" placeholder="32">
-    </label>
-    <br/>
-    <label>
-        Color Variability (i.e. the flexibility of a pixel match when scanning)
-        <input id="color-variability" type="integer" placeholder="5">
-    </label>
-    <br/>
-    <label>
-        Image file-path
-        <input id="image-path" type="text" placeholder="img source path" />
-    </label>
-    <br/>
-    <button onClick="logImageData()">Analyze Img</button>
-    <div id="clips"></div>
+    <div class="header">
+        <h1>Image-to-HTML</h1>
+        <h2>Generates an HTML and CSS Webpage from an Image</h2>
+    </div>
+
+    <div id="main">
+        <img id="model-image" src="" width="auto" height="auto"/>
+        <canvas id="canvas", width="0" height="0" style="border:1px solid #000"></canvas>
+        <br />
+        <label>
+            Pivot-Size (i.e. the number of pixels skipped when scanning)
+            <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="32">
+        </label>
+        <br/>
+        <label>
+            Color Variability (i.e. the flexibility of a pixel match when scanning)
+            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="5">
+        </label>
+        <br/>
+        <label>
+            Image file-path
+            <input id="image-path" class="top-marg2rem" type="text" placeholder="img source path" />
+        </label>
+        <br/>
+        <button onClick="logImageData()">Analyze Img</button>
+        <div id="clips"></div>
+    </div>
     <script>
         function logImageData() {
             const imagePath = document.getElementById("image-path").value || "template_examples/template1.png";
