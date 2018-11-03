@@ -39,7 +39,6 @@ function cloneCanvasContext(oldCanvas) {
     context.drawImage(oldCanvas, 0, 0);
 
     //return the new canvas
-    // return newCanvas;
     return newCanvas.getContext('2d');
 }
 
@@ -47,7 +46,6 @@ function cloneCanvasContext(oldCanvas) {
 
 function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_size, color_variability){
 
-    // console.log(targetColor);
     let res;
     let foundRegions = [];
     let p = 0;
@@ -122,7 +120,6 @@ function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_si
 }
 
 function searchPointByRegion(options){
-    console.log(options);
     let ctx = options.ctx;
     let targetColor = options.targetColor;
     let x = options.x;
@@ -150,8 +147,10 @@ function searchPointByRegion(options){
 
 // addapted from pseudocode at
 // https://stackoverflow.com/questions/21865922/non-recursive-implementation-of-flood-fill-algorithm
+// iterative inPlace floodSearch -- otherwise the browser can't deal with the stackframes/memory
 function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_size, color_variability) {
 
+    // thinking of refactoring to an options hash like the above searchPointByRegion function
     // {
     //     ctx, 
     //     target_color, 
@@ -177,7 +176,7 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
         //if (nxtColor && colorMatch(nxtColor, target_color, color_variability)) {
         if (scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
             ctx = colorCTX(ctx, coord[0], coord[1], nullColor);
-            if(Xs.length < 2) {
+            if(Xs.length < 2) { // Update the rectangle x coordinates in O(3) time and O(3) space
                 Xs.push(coord[0]);
                 if(Xs.length == 2){
                     if(Xs[0] > Xs[1]) {
@@ -192,7 +191,7 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
                 else if (Xs[1] < coord[0]) Xs[1] = coord[0];
             }
 
-            if (Ys.length < 2) {
+            if (Ys.length < 2) {  // Update the rectangle y coordinates in O(3) time and O(3) space
                 Ys.push(coord[1]);
                 if (Ys.length == 2) {
                     if (Ys[0] > Ys[1]) {
@@ -256,14 +255,12 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
                 stack.push([minX, lstY + sweep_size]);
                 alreadySeen.push([minX, lstY + sweep_size]);
             }
-   
-            // if (lstX >= width && lstY >= height) return { xs: [minX, lstX], ys: [minY, lstY], context: ctx}; // don't need
         }
     }
     return { xs: Xs, ys: Ys, context: ctx };
 }
 
-function arrHasCoord(arr, coord){
+function arrHasCoord(arr, coord){       // helper floodSearch to not search an already searched pixel coordinate
     for (let i = 0; i < arr.length; ++i) {
         let crd = arr[i];
         if (crd[0] === coord[0] && crd[1] === coord[1]) return true;
@@ -278,7 +275,7 @@ function scanForSimilarFromPoint(ctx, point, rgb, pivot, color_variability){
     let br = [point[0] + pivot, point[1] + pivot];                          // bottom right
     let count = colorOccurrenceInArea(ctx, rgb, ul, br, color_variability); // check if average color is similar to target color
     let thrd_area = Math.floor(((pivot) * (pivot)) / 3);
-    console.log(thrd_area);
+
     return count >= thrd_area;
 
 }

@@ -1,5 +1,6 @@
 body{
     background: #2d3136;
+    min-width: 400px;
 }
 
 #main{
@@ -7,13 +8,16 @@ body{
     font-style: sans-serif;
     font-size: 2rem;
     justify-content: center;
+    text-align: center;
     flex-direction: column;
     align-items: center;
     background: #4bd3ec;
     padding: 2rem;
     border-radius: 0 2rem;
     box-shadow: 3px 3px 3px #25272b;
+    min-width: 400px;
 }
+
 
 .header{
     display: flex;
@@ -22,21 +26,29 @@ body{
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    text-align: center;
     background: #fcf1d6;
-    padding: 2rem;
+    padding: 4rem;
+    height: auto;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
     border-radius: 2rem 0;
     box-shadow: 3px 3px 3px #25272b;
+    min-width: 400px;
 }
 
 .header h1{
     font-size: 4rem;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.header h2{
+    padding: 0;
+    margin: 0;
+    font-size: 2rem;
 }
 
-.header h2 {
-
-}
 
 #main input, select {
     width: 8rem;
@@ -47,8 +59,24 @@ body{
 }
 select {
     margin-top: 1rem;
+    width: 22rem;
+    text-align: center;
 }
 
+#pivot-radius-display{
+  height: 4rem;
+  width: 4rem;
+  margin-top: 2rem;
+  margin-left: 3rem;
+  background-color: #fbc034;
+  border: 2px solid #3b4046;
+  border-radius: 50%;
+}
+
+.flex-row-space-between{
+    display: flex;
+    align-items: center;
+}
 
 #main label {
     display: flex;
@@ -65,7 +93,8 @@ select {
 }
 
 #main #image-path {
-    width: 32rem;
+    max-width: 32rem;
+    min-width: 460px;
 }
 
 #main button {

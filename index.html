@@ -16,44 +16,171 @@
         <img id="model-image" src="" width="auto" height="auto"/>
         <canvas id="canvas", width="0" height="0" style="border:1px solid #000"></canvas>
         <br />
-        <label>
+        <label id="pivot-size-label">
             Pivot-Size (i.e. the number of pixels skipped when scanning)
-            <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="4">
+            <div class="flex-row-space-between">
+                <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="4" onchange="changePivotRadiusDisplay()">
+                <div id="pivot-radius-display"></div>
+            </div>
         </label>
         <br/>
-        <label>
+        <label id="color-variability-label">
             Color Variability (i.e. the flexibility of a pixel match when scanning)
-            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="12">
+            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="12" onchange="changeVariabilityLabel()">
         </label>
         <br/>
         <label id="background-color-selector">
             Background Color (the color that gets ignored when parsing the image)
-            <select id="color-selector" onchange="changeLabelBackgroundColor()">
+            <select id="color-selector" onchange="changeBkgrndColorSelectorLabel()">
                 <option value="#fbc034"></option>
                 <option value="#FFFFFF">White</option>
-                <option value="#000000">Black</option>
-                <option value="#808080">Gray</option>
                 <option value="#FF0000">Red</option>
-                <option value="#FFA500">Orange</option>
-                <option value="#FFFF00">Yellow</option>
-                <option value="#008000">Green</option>
                 <option value="#0000FF">Blue</option>
-                <option value="#800080">Purple</option>
-                <option value="#A52A2A">Brown</option>
+                <option value="#008000">Green</option>
+                <option value="#000000">Black</option>
+                <option value="#E6E6FA">Lavender</option>
+                <option value="#D8BFD8">Thistle</option>
+                <option value="#DDA0DD">Plum</option>
+                <option value="#EE82EE">Violet</option>
+                <option value="#DA70D6">Orchid</option>
+                <option value="#FF00FF">Fuchsia</option>
                 <option value="#FF00FF">Magenta</option>
-                <option value="#D2B48C">Tan</option>
+                <option value="#BA55D3">MediumOrchid</option>
+                <option value="#9370DB">MediumPurple</option>
+                <option value="#8A2BE2">BlueViolet</option>
+                <option value="#9400D3">DarkViolet</option>
+                <option value="#9932CC">DarkOrchid</option>
+                <option value="#8B008B">DarkMagenta</option>
+                <option value="#800080">Purple</option>
+                <option value="#663399">RebeccaPurple</option>
+                <option value="#4B0082">Indigo</option>
+                <option value="#7B68EE">MediumSlateBlue</option>
+                <option value="#6A5ACD">SlateBlue</option>
+                <option value="#483D8B">DarkSlateBlue</option>
+                <option value="#00FFFF">Aqua</option>
                 <option value="#00FFFF">Cyan</option>
-                <option value="#808000">Olive</option>
-                <option value="#800000">Maroon</option>
-                <option value="#000080">Navy</option>
+                <option value="#E0FFFF">LightCyan</option>
+                <option value="#AFEEEE">PaleTurquoise</option>
                 <option value="#7FFFD4">Aquamarine</option>
                 <option value="#40E0D0">Turquoise</option>
-                <option value="#C0C0C0">Silver</option>
+                <option value="#48D1CC">MediumTurquoise</option>
+                <option value="#00CED1">DarkTurquoise</option>
+                <option value="#5F9EA0">CadetBlue</option>
+                <option value="#4682B4">SteelBlue</option>
+                <option value="#B0C4DE">LightSteelBlue</option>
+                <option value="#B0E0E6">PowderBlue</option>
+                <option value="#ADD8E6">LightBlue</option>
+                <option value="#87CEEB">SkyBlue</option>
+                <option value="#87CEFA">LightSkyBlue</option>
+                <option value="#00BFFF">DeepSkyBlue</option>
+                <option value="#1E90FF">DodgerBlue</option>
+                <option value="#6495ED">CornflowerBlue</option>
+                <option value="#4169E1">RoyalBlue</option>
+                <option value="#0000CD">MediumBlue</option>
+                <option value="#00008B">DarkBlue</option>
+                <option value="#000080">Navy</option>
+                <option value="#191970">MidnightBlue</option>
+                <option value="#ADFF2F">GreenYellow</option>
+                <option value="#7FFF00">Chartreuse</option>
+                <option value="#7CFC00">LawnGreen</option>
                 <option value="#00FF00">Lime</option>
+                <option value="#32CD32">LimeGreen</option>
+                <option value="#98FB98">PaleGreen</option>
+                <option value="#90EE90">LightGreen</option>
+                <option value="#00FA9A">MediumSpringGreen</option>
+                <option value="#00FF7F">SpringGreen</option>
+                <option value="#3CB371">MediumSeaGreen</option>
+                <option value="#2E8B57">SeaGreen</option>
+                <option value="#228B22">ForestGreen</option>
+                <option value="#006400">DarkGreen</option>
+                <option value="#9ACD32">YellowGreen</option>
+                <option value="#6B8E23">OliveDrab</option>
+                <option value="#808000">Olive</option>
+                <option value="#556B2F">DarkOliveGreen</option>
+                <option value="#66CDAA">MediumAquamarine</option>
+                <option value="#8FBC8F">DarkSeaGreen</option>
+                <option value="#20B2AA">LightSeaGreen</option>
+                <option value="#008B8B">DarkCyan</option>
                 <option value="#008080">Teal</option>
-                <option value="#4B0082">Indigo</option>
-                <option value="#EE82EE">Violet</option>
+                <option value="#FFD700">Gold</option>
+                <option value="#FFFF00">Yellow</option>
+                <option value="#FFFFE0">LightYellow</option>
+                <option value="#FFFACD">LemonChiffon</option>
+                <option value="#FAFAD2">LightGoldenrodYellow</option>
+                <option value="#FFEFD5">PapayaWhip</option>
+                <option value="#FFE4B5">Moccasin</option>
+                <option value="#FFDAB9">PeachPuff</option>
+                <option value="#EEE8AA">PaleGoldenrod</option>
+                <option value="#F0E68C">Khaki</option>
+                <option value="#BDB76B">DarkKhaki</option>
+                <option value="#FF7F50">Coral</option>
+                <option value="#FF6347">Tomato</option>
+                <option value="#FF4500">OrangeRed</option>
+                <option value="#FF8C00">DarkOrange</option>
+                <option value="#FFA500">Orange</option>
                 <option value="#FFC0CB">Pink</option>
+                <option value="#FFB6C1">LightPink</option>
+                <option value="#FF69B4">HotPink</option>
+                <option value="#FF1493">DeepPink</option>
+                <option value="#C71585">MediumVioletRed</option>
+                <option value="#DB7093">PaleVioletRed</option>
+                <option value="#CD5C5C">IndianRed</option>
+                <option value="#F08080">LightCoral</option>
+                <option value="#FA8072">Salmon</option>
+                <option value="#E9967A">DarkSalmon</option>
+                <option value="#FFA07A">LightSalmon</option>
+                <option value="#DC143C">Crimson</option>
+                <option value="#B22222">FireBrick</option>
+                <option value="#8B0000">DarkRed</option>
+                <option value="#FFF8DC">Cornsilk</option>
+                <option value="#FFEBCD">BlanchedAlmond</option>
+                <option value="#FFE4C4">Bisque</option>
+                <option value="#FFDEAD">NavajoWhite</option>
+                <option value="#F5DEB3">Wheat</option>
+                <option value="#DEB887">BurlyWood</option>
+                <option value="#D2B48C">Tan</option>
+                <option value="#BC8F8F">RosyBrown</option>
+                <option value="#F4A460">SandyBrown</option>
+                <option value="#DAA520">Goldenrod</option>
+                <option value="#B8860B">DarkGoldenrod</option>
+                <option value="#CD853F">Peru</option>
+                <option value="#D2691E">Chocolate</option>
+                <option value="#8B4513">SaddleBrown</option>
+                <option value="#A0522D">Sienna</option>
+                <option value="#A52A2A">Brown</option>
+                <option value="#800000">Maroon</option>
+                <option value="#FFFAFA">Snow</option>
+                <option value="#F0FFF0">Honeydew</option>
+                <option value="#F5FFFA">MintCream</option>
+                <option value="#F0FFFF">Azure</option>
+                <option value="#F0F8FF">AliceBlue</option>
+                <option value="#F8F8FF">GhostWhite</option>
+                <option value="#F5F5F5">WhiteSmoke</option>
+                <option value="#FFF5EE">Seashell</option>
+                <option value="#F5F5DC">Beige</option>
+                <option value="#FDF5E6">OldLace</option>
+                <option value="#FFFAF0">FloralWhite</option>
+                <option value="#FFFFF0">Ivory</option>
+                <option value="#FAEBD7">AntiqueWhite</option>
+                <option value="#FAF0E6">Linen</option>
+                <option value="#FFF0F5">LavenderBlush</option>
+                <option value="#FFE4E1">MistyRose</option>
+                <option value="#DCDCDC">Gainsboro</option>
+                <option value="#D3D3D3">LightGray</option>
+                <option value="#D3D3D3">LightGrey</option>
+                <option value="#C0C0C0">Silver</option>
+                <option value="#A9A9A9">DarkGray</option>
+                <option value="#A9A9A9">DarkGrey</option>
+                <option value="#808080">Gray</option>
+                <option value="#808080">Grey</option>
+                <option value="#696969">DimGray</option>
+                <option value="#696969">DimGrey</option>
+                <option value="#778899">LightSlateGray</option>
+                <option value="#778899">LightSlateGrey</option>
+                <option value="#708090">SlateGray</option>
+                <option value="#708090">SlateGrey</option>
+                <option value="#2F4F4F">DarkSlateGray</option>
+                <option value="#2F4F4F">DarkSlateGrey</option>
             </select>
         </label>
         <br/>
@@ -98,19 +225,79 @@
 
 
 
-        function changeLabelBackgroundColor(){
+        function changeBkgrndColorSelectorLabel(){
             let csl = document.getElementById('color-selector');
             let bcsl = document.getElementById('background-color-selector');
             bcsl.style.backgroundColor = csl[csl.selectedIndex].value;
             let res = hexToRgb(csl[csl.selectedIndex].value);
             let lowNums = 0;
+            let lightenFont = false;
             if(res.blue < 26) lowNums += 1;
             if(res.green < 26) lowNums += 1;
             if(res.blue < 26) lowNums += 1;
             if(lowNums === 3){
                 bcsl.style.color = "#FFFFFF";
+                lightenFont = true;
             } else {
                 bcsl.style.color = "#000000";
+            }
+            changeVariabilityLabel(csl, lightenFont); // update the color variability display
+        }
+
+        function changeVariabilityLabel(csl = null, lightenFont = null){
+            csl = csl ? csl : document.getElementById('color-selector'); // bkgrnd color 
+            let base = hexToRgb(csl[csl.selectedIndex].value);//hexToRgb("#fbc034");
+            console.log('base', base);
+            let cvLabel = document.getElementById("color-variability-label");
+            let cvVari = document.getElementById("color-variability").value || "0";
+            cvVari = parseFloat(cvVari);
+            let startGrad = { 
+                red: base.red - cvVari,
+                green: base.green  - cvVari,
+                blue: base.blue  - cvVari
+            }
+            if (startGrad.red < 0) startGrad.red = 0;
+            if (startGrad.green < 0) startGrad.green = 0;
+            if (startGrad.blue < 0) startGrad.blue = 0;
+            if (startGrad.red > 255) startGrad.red = 255;
+            if (startGrad.green > 255) startGrad.green = 255;
+            if (startGrad.blue > 255) startGrad.blue = 255;
+
+            let endGrad = {
+                red: base.red + cvVari,
+                green: base.green + cvVari,
+                blue: base.blue + cvVari
+            }
+            if (endGrad.red < 0) endGrad.red = 0;
+            if (endGrad.green < 0) endGrad.green = 0;
+            if (endGrad.blue < 0) endGrad.blue = 0;
+            if (endGrad.red > 255) endGrad.red = 255;
+            if (endGrad.green > 255) endGrad.green = 255;
+            if (endGrad.blue > 255) endGrad.blue = 255;
+            // set text color to work with changed gradient by giving shadow
+            if (lightenFont || Math.abs(cvVari) > 25) cvLabel.style.textShadow = "0px 0px 2px #FFF";
+            else cvLabel.style.textShadow = "";
+
+            // change the gradient
+            let newGradientDisplay = `linear-gradient(to left, 
+                rgb(${startGrad.red}, ${startGrad.green}, ${startGrad.blue}) 30%, 
+                rgb(${endGrad.red}, ${endGrad.green}, ${endGrad.blue}) 70%)`;
+
+            cvLabel.style.background = newGradientDisplay;
+
+            // change pivot radius gradient while we're at it
+            changePivotRadiusDisplay(newGradientDisplay);
+        }
+
+
+        function changePivotRadiusDisplay(newcolor = null){
+            let  ss = document.getElementById("scanning-pivot-size").value || "4";
+            ss = parseFloat(ss)
+            let prd = document.getElementById("pivot-radius-display");
+            prd.style.height = `${ss}rem`;
+            prd.style.width = `${ss}rem`;
+            if(newcolor){
+                prd.style.background = newcolor;
             }
         }
 
