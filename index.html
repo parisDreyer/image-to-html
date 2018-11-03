@@ -26,11 +26,43 @@
             <input id="color-variability" class="top-marg2rem" type="integer" placeholder="5">
         </label>
         <br/>
+        <label id="background-color-selector">
+            Background Color
+            <select id="color-selector" onchange="changeLabelBackgroundColor()">
+                <option value="#fbc034"></option>
+                <option value="#FFFFFF">White</option>
+                <option value="#000000">Black</option>
+                <option value="#808080">Gray</option>
+                <option value="#FF0000">Red</option>
+                <option value="#FFA500">Orange</option>
+                <option value="#FFFF00">Yellow</option>
+                <option value="#008000">Green</option>
+                <option value="#0000FF">Blue</option>
+                <option value="#800080">Purple</option>
+                <option value="#A52A2A">Brown</option>
+                <option value="#FF00FF">Magenta</option>
+                <option value="#D2B48C">Tan</option>
+                <option value="#00FFFF">Cyan</option>
+                <option value="#808000">Olive</option>
+                <option value="#800000">Maroon</option>
+                <option value="#000080">Navy</option>
+                <option value="#7FFFD4">Aquamarine</option>
+                <option value="#40E0D0">Turquoise</option>
+                <option value="#C0C0C0">Silver</option>
+                <option value="#00FF00">Lime</option>
+                <option value="#008080">Teal</option>
+                <option value="#4B0082">Indigo</option>
+                <option value="#EE82EE">Violet</option>
+                <option value="#FFC0CB">Pink</option>
+            </select>
+        </label>
+        <br/>
         <label>
             Image file-path
             <input id="image-path" class="top-marg2rem" type="text" placeholder="img source path" />
         </label>
         <br/>
+
         <button onClick="logImageData()">Analyze Img</button>
         <div id="clips"></div>
     </div>
@@ -44,7 +76,12 @@
                 let pivot_size = document.getElementById("scanning-pivot-size").value || "8";
                 let color_variability = document.getElementById("color-variability").value || "12";
 
-                let rects = possibleRects(data.pixels, data.canvas, data.context, parseFloat(pivot_size), parseFloat(color_variability));
+                let csl = document.getElementById('color-selector');
+                let background_color = csl.selectedIndex > 0 ? [csl.selectedIndex].value : { red: 255, blue: 255, green: 255 };
+
+                let rects = possibleRects(data.pixels, 
+                    data.canvas, data.context, parseFloat(pivot_size), 
+                    parseFloat(color_variability), background_color);
                 console.log(rects);
 
 
@@ -58,6 +95,36 @@
                 console.log(html_and_css);
             }
         }
+
+
+
+        function changeLabelBackgroundColor(){
+            let csl = document.getElementById('color-selector');
+            let bcsl = document.getElementById('background-color-selector');
+            bcsl.style.backgroundColor = csl[csl.selectedIndex].value;
+            let res = hexToRgb(csl[csl.selectedIndex].value);
+            let lowNums = 0;
+            if(res.blue < 26) lowNums += 1;
+            if(res.green < 26) lowNums += 1;
+            if(res.blue < 26) lowNums += 1;
+            if(lowNums === 3){
+                bcsl.style.color = "#FFFFFF";
+            } else {
+                bcsl.style.color = "#000000";
+            }
+        }
+
+
+        function hexToRgb(hex) { // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result
+                    ? {
+                        red: parseInt(result[1], 16),
+                        green: parseInt(result[2], 16),
+                        blue: parseInt(result[3], 16)
+                    }
+                    : null;
+            }
     </script>
 </body>
 </html>

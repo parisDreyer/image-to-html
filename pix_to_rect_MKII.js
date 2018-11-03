@@ -1,9 +1,8 @@
-
-function possibleRects(data, canvas, ctx, pivot_size, color_variability){
-    let avgColor = getAverageRGB(data.data);
-    let topLeftColor = rgbaAtImgCoordinate(ctx, 0, 0);
+// the background color is the color that this algorithm will avoid making rectangles from
+function possibleRects(data, canvas, ctx, pivot_size, color_variability, backgroundColor = { red: 255, blue: 255, green: 255 }){
+    // let avgColor = getAverageRGB(data.data);
+    // let topLeftColor = rgbaAtImgCoordinate(ctx, 0, 0);
     let allColors = getAllColors(data.data);
-    let nullColor = { red: 255, blue: 255, green: 255 };
     console.log(allColors);
 
     let colorRegions = {};
@@ -13,7 +12,7 @@ function possibleRects(data, canvas, ctx, pivot_size, color_variability){
           hex: allColors[i],
           regions: allRegionsForColor(
               cloneCanvasContext(canvas), 
-                currColor, canvas.height, canvas.width, avgColor, pivot_size, color_variability
+                currColor, canvas.height, canvas.width, backgroundColor, pivot_size, color_variability
             )
         }
     }

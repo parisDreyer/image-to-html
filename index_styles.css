@@ -12,6 +12,7 @@ body{
     background: #4bd3ec;
     padding: 2rem;
     border-radius: 0 2rem;
+    box-shadow: 3px 3px 3px #25272b;
 }
 
 .header{
@@ -26,6 +27,7 @@ body{
     margin-top: 1.5rem;
     margin-bottom: 1rem;
     border-radius: 2rem 0;
+    box-shadow: 3px 3px 3px #25272b;
 }
 
 .header h1{
@@ -36,17 +38,17 @@ body{
 
 }
 
-#main input {
+#main input, select {
     width: 8rem;
     height: 4rem;
     padding-left: 1rem;
     font: inherit;
+    box-shadow: 1.5px 1.5px 1.5px #3b4046;
+}
+select {
+    margin-top: 1rem;
 }
 
-#main button {
-    width: 16rem;
-    height: 8rem;
-}
 
 #main label {
     display: flex;
@@ -59,6 +61,7 @@ body{
     padding-top: 3rem;
     padding-bottom: 2rem;
     border-radius: 4rem 8rem 6rem;
+    box-shadow: 3px 3px 3px #3b4046;
 }
 
 #main #image-path {
@@ -66,7 +69,18 @@ body{
 }
 
 #main button {
+    width: 16rem;
+    height: 8rem;
     font: inherit;
+    background-color: #f3f3ff;
+    border: 1px solid #8a8a8a;
+    box-shadow: 3px 3px 3px #3b4046;
+}
+
+#main button:hover {
+    background-color: #ff9c00;
+    border: 2px solid #2d3136;
+    cursor: pointer;
 }
 
 .top-marg2rem{
