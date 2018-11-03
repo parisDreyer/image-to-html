@@ -64,138 +64,57 @@ function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_si
         sweep_size: sweep_size,
         color_variability: color_variability
     };
-    while (p <= midW && p <= midH) {// search converging sections of the image from each corner
+    while (p <= midW && p <= midH) {
+        // search converging sections of the image from each corner
         if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor, color_variability)){ // top left
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: p,
-            //     y: p,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             res = searchPointByRegion(searchOptions);
             if(res.start && res.end) foundRegions.push({start: res.start, end: res.end});
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, p), targetColor, color_variability)) { // top right
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: width - p,
-            //     y: p,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             searchOptions.x = width - p; searchOptions.y = p;
             res = searchPointByRegion(searchOptions);
-
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, height - p), targetColor, color_variability)){ // bottom left
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: p,
-            //     y: height - p,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             searchOptions.x = p; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, height - p), targetColor, color_variability)) { // bottom right
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: width - p,
-            //     y: height - p,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             searchOptions.x = width - p; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         }
-
-
+        // from the middle of each edge to the center of the image
         if (colorMatch(rgbaAtImgCoordinate(ctx, midW, p), targetColor, color_variability)) { // mid top
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: midW,
-            //     y: p,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             searchOptions.x = midW; searchOptions.y = p;
             res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, midW, height - p), targetColor, color_variability)) { // mid bottom
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: midW,
-            //     y: height - p,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             searchOptions.x = midW; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, midH), targetColor, color_variability)) { // left mid
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: p,
-            //     y: midH,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             searchOptions.x = p; searchOptions.y = midH;
             res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, midH), targetColor, color_variability)) { // right mid
-            // res = searchPointByRegion({
-            //     ctx: ctx,
-            //     targetColor: targetColor,
-            //     x: (width - p),
-            //     y: midH,
-            //     nullColor: nullColor,
-            //     width: width,
-            //     height: height,
-            //     sweep_size: sweep_size,
-            //     color_variability: color_variability
-            // });
+
             searchOptions.x = (width - p); searchOptions.y = midH;
             res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
-            ctx = res.context;
+            searchOptions.ctx = res.context;
         }
         p += sweep_size;//++;
     }
