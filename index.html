@@ -18,16 +18,16 @@
         <br />
         <label>
             Pivot-Size (i.e. the number of pixels skipped when scanning)
-            <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="32">
+            <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="4">
         </label>
         <br/>
         <label>
             Color Variability (i.e. the flexibility of a pixel match when scanning)
-            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="5">
+            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="12">
         </label>
         <br/>
         <label id="background-color-selector">
-            Background Color
+            Background Color (the color that gets ignored when parsing the image)
             <select id="color-selector" onchange="changeLabelBackgroundColor()">
                 <option value="#fbc034"></option>
                 <option value="#FFFFFF">White</option>
@@ -58,8 +58,8 @@
         </label>
         <br/>
         <label>
-            Image file-path
-            <input id="image-path" class="top-marg2rem" type="text" placeholder="img source path" />
+            Image file-path (place any img link here)
+            <input id="image-path" class="top-marg2rem" type="text" placeholder="./template_examples/template1.png" />
         </label>
         <br/>
 
@@ -73,7 +73,7 @@
             appendImage(imagePath).onload = () => {
                 const data = imageData(document.getElementById("model-image"));
 
-                let pivot_size = document.getElementById("scanning-pivot-size").value || "8";
+                let pivot_size = document.getElementById("scanning-pivot-size").value || "4";
                 let color_variability = document.getElementById("color-variability").value || "12";
 
                 let csl = document.getElementById('color-selector');
