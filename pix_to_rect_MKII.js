@@ -53,128 +53,147 @@ function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_si
     let p = 0;
     let midW = width / 2
     let midH = height / 2
+    let searchOptions = {
+        ctx: ctx,
+        targetColor: targetColor,
+        x: p,
+        y: p,
+        nullColor: nullColor,
+        width: width,
+        height: height,
+        sweep_size: sweep_size,
+        color_variability: color_variability
+    };
     while (p <= midW && p <= midH) {// search converging sections of the image from each corner
         if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor, color_variability)){ // top left
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: p,
-                y: p,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
-            // res = searchPointByRegion(ctx, targetColor, p, p, nullColor, width, height, sweep_size, color_variability);
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: p,
+            //     y: p,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            res = searchPointByRegion(searchOptions);
             if(res.start && res.end) foundRegions.push({start: res.start, end: res.end});
             ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, p), targetColor, color_variability)) { // top right
-            // res = searchPointByRegion(ctx, targetColor, width - p, p, nullColor, width, height, sweep_size, color_variability);
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: width - p,
-                y: p,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: width - p,
+            //     y: p,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            searchOptions.x = width - p; searchOptions.y = p;
+            res = searchPointByRegion(searchOptions);
+
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
             ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, height - p), targetColor, color_variability)){ // bottom left
-            // res = searchPointByRegion(ctx, targetColor, p, height - p, nullColor, width, height, sweep_size, color_variability);
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: p,
-                y: height - p,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: p,
+            //     y: height - p,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            searchOptions.x = p; searchOptions.y = (height - p);
+            res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
             ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, height - p), targetColor, color_variability)) { // bottom right
-            // res = searchPointByRegion(ctx, targetColor, width - p, height - p, nullColor, width, height, sweep_size, color_variability);
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: width - p,
-                y: height - p,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: width - p,
+            //     y: height - p,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            searchOptions.x = width - p; searchOptions.y = (height - p);
+            res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
             ctx = res.context;
         }
 
 
         if (colorMatch(rgbaAtImgCoordinate(ctx, midW, p), targetColor, color_variability)) { // mid top
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: midW,
-                y: p,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
-            //res = searchPointByRegion(ctx, targetColor, midW, p, nullColor, width, height, sweep_size, color_variability);
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: midW,
+            //     y: p,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            searchOptions.x = midW; searchOptions.y = p;
+            res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
             ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, midW, height - p), targetColor, color_variability)) { // mid bottom
-            // res = searchPointByRegion(ctx, targetColor, midW, height - p, nullColor, width, height, sweep_size, color_variability);
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: midW,
-                y: height - p,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: midW,
+            //     y: height - p,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            searchOptions.x = midW; searchOptions.y = (height - p);
+            res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
             ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, midH), targetColor, color_variability)) { // left mid
-            // res = searchPointByRegion(ctx, targetColor, p, midH, nullColor, width, height, sweep_size, color_variability);
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: p,
-                y: midH,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: p,
+            //     y: midH,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            searchOptions.x = p; searchOptions.y = midH;
+            res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
             ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, midH), targetColor, color_variability)) { // right mid
-            // res = searchPointByRegion(ctx, targetColor, width - p, midH, nullColor, width, height, sweep_size, color_variability);
-            res = searchPointByRegion({
-                ctx: ctx,
-                targetColor: targetColor,
-                x: (width - p),
-                y: midH,
-                nullColor: nullColor,
-                width: width,
-                height: height,
-                sweep_size: sweep_size,
-                color_variability: color_variability
-            });
+            // res = searchPointByRegion({
+            //     ctx: ctx,
+            //     targetColor: targetColor,
+            //     x: (width - p),
+            //     y: midH,
+            //     nullColor: nullColor,
+            //     width: width,
+            //     height: height,
+            //     sweep_size: sweep_size,
+            //     color_variability: color_variability
+            // });
+            searchOptions.x = (width - p); searchOptions.y = midH;
+            res = searchPointByRegion(searchOptions);
             if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
             ctx = res.context;
         }
@@ -199,10 +218,9 @@ function searchPointByRegion(options){
     let res = floodSearch(ctx, targetColor, x, y, nullColor, width, height, sweep_size, color_variability);
 
     ctx = res.context;
-    let Xs = res.xs, Ys = res.ys;
-    let resX = Xs.sort(), resY = Ys.sort();
-    let xmin = resX[0], ymin = resY[0];
-    let xmax = resX[resX.length - 1], ymax = resY[resY.length - 1];
+    
+    let xmin = res.xs[0], ymin = res.ys[0];
+    let xmax = res.xs[1], ymax = res.ys[1];
 
     if (xmin != xmax && ymin != ymax) return { start: [xmin, ymin], end: [xmax, ymax], context: ctx };
     else return { start: false, end: false, context: ctx };
@@ -214,6 +232,20 @@ function searchPointByRegion(options){
 // addapted from pseudocode at
 // https://stackoverflow.com/questions/21865922/non-recursive-implementation-of-flood-fill-algorithm
 function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_size, color_variability) {
+
+    // {
+    //     ctx, 
+    //     target_color, 
+    //     x, y, 
+    //     nullColor, 
+    //     width, 
+    //     height, 
+    //     sweep_size, 
+    //     color_variability
+    // }
+
+
+
     let Xs = [], Ys = []; // the best fit return values
 
     let stack = []; // stack is dfs, queue is bfs
@@ -223,13 +255,8 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
         let coord = stack.pop();
         let nxtColor = rgbaAtImgCoordinate(ctx, coord[0], coord[1]);
 
-        // let validScanRange = coord[0] - sweep_size > 0 && 
-        //                 coord[0] + sweep_size < width && 
-        //                 coord[1] - sweep_size > 0 && 
-        //                 coord[1] + sweep_size < height;
-        // console.log(validScanRange);
-        if (scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
         //if (nxtColor && colorMatch(nxtColor, target_color, color_variability)) {
+        if (scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
             ctx = colorCTX(ctx, coord[0], coord[1], nullColor);
             if(Xs.length < 2) {
                 Xs.push(coord[0]);
@@ -366,30 +393,6 @@ function colorOccurrenceInArea(ctx, color, upperLeftCoord, lowerRightCoord, colo
 }
 
 
-// function avgColorInArea(ctx, upperLeftCoord, lowerRightCoord){
-//     let rgba = {red: 0, green: 0, blue: 0, alpha: 0 };
-//     let count = 0;
-//     for(let x = upperLeftCoord[0]; x < lowerRightCoord[0]; x += rndM(2, 5)){
-//         for(let y = upperLeftCoord[1]; y < lowerRightCoord[1]; y += rndM(2,5)){
-//             let nxtRgba = rgbaAtImgCoordinate(ctx, x,y);
-//             if (nxtRgba.red && nxtRgba.blue && nxtRgba.green && nxtRgba.alpha){
-//                 rgba.red += nxtRgba.red;
-//                 rgba.green += nxtRgba.green;
-//                 rgba.blue += nxtRgba.blue;
-//                 rgba.alpha += nxtRgba.alpha;
-//                 count += 1;
-//             }
-//         }
-//     }
-//     return {
-//         red: Math.floor(rgba.red / count),
-//         green: Math.floor(rgba.green / count),
-//         blue: Math.floor(rgba.blue / count),
-//         alpha: Math.floor(rgba.alpha / count)
-//     };
-// }
-
-
 // rnd between min incls and max excls
 function rndM(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -480,30 +483,3 @@ function colorMatch(rgba1, rgba2, rgbaAllowedDelta = 5) {
 }
 
 
-
-// https://www.geeksforgeeks.org/check-whether-given-point-lies-inside-rectangle-not/
-    // A utility function to calculate area 
-    // of triangle formed by (x1, y1),   
-    // (x2, y2) and (x3, y3) 
-//     function area( x1,  y1,  x2,  y2,  x3,  y3) { 
-//         return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0); 
-//     } 
-
-//     // A function to check whether point P(x, y)  
-//     // lies inside the rectangle formed by A(x1, y1),  
-//     // B(x2, y2), C(x3, y3) and D(x4, y4)  
-// function pointInRect(x1, y1, x2, y2, x3, y3, x4, y4, x, y) {          
-//         // Calculate area of rectangle ABCD  
-//         let A = area(x1, y1, x2, y2, x3, y3) + area(x1, y1, x4, y4, x3, y3); 
-//         // Calculate area of triangle PAB  
-//         let A1 = area(x, y, x1, y1, x2, y2); 
-//         // Calculate area of triangle PBC  
-//         let A2 = area(x, y, x2, y2, x3, y3); 
-//         // Calculate area of triangle PCD  
-//         let A3 = area(x, y, x3, y3, x4, y4);  
-//         // Calculate area of triangle PAD 
-//         let A4 = area(x, y, x1, y1, x4, y4); 
-//         // Check if sum of A1, A2, A3   
-//         // and A4is same as A  
-//         return (A == A1 + A2 + A3 + A4); 
-//     } 
