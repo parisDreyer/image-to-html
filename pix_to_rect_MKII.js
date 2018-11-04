@@ -8,17 +8,54 @@ function possibleRects(data, canvas, ctx, pivot_size, color_variability, backgro
     let colorRegions = {};
     for(let i = 0; i < allColors.length; ++i){
         let currColor = hexToRgb(allColors[i]);
-        colorRegions[i] = {
+        //colorRegions[i] = {
+        newRegion = {
           hex: allColors[i],
           regions: allRegionsForColor(
               cloneCanvasContext(canvas), 
                 currColor, canvas.height, canvas.width, backgroundColor, pivot_size, color_variability
             )
         }
+        colorRegions = mergeSimilarAndProximalColorRegions(colorRegions, i, newRegion, color_variability);
+        
     }
     return Object.values(colorRegions).filter(obj => obj.regions.length > 0);
 }
 
+// helper for possibleRects()
+function mergeSimilarAndProximalColorRegions(
+  colorsHash,
+  hashLength,
+  newRegionHash,
+  colorVariability
+) {
+  let new_regions = newRegionHash.regions;
+  let new_color = hexToRgb(newRegionHash.hex);
+  for (let i = 0; i < hashLength; ++i) {
+    if (colorMatch(hexToRgb(colorsHash[i].hex), new_color, colorVariability)) {
+      // if the colors are in the right rgb range of each other
+      let old_regions = colorsHash[i].regions;
+
+      for (let z = 0; z < new_regions.length; ++z) {
+        if (new_regions[z]) {
+          // if not previously joined
+          let res = joinOverlappingRegions(old_regions, new_regions[z], false);
+          if (res.updated_existing) {
+            new_regions[z] = null; // no longer need this region because was joined
+            old_regions = res.regions; // updated
+          }
+        }
+      } // end comparison of new with old_regions
+
+      colorsHash[i].regions = old_regions; // revise the old_regions with new region area info
+    } // end old_regions update
+  }
+
+  newRegionHash.regions = new_regions.filter(reg => reg); // only update with the regions that did not overlap (were not set to false)
+  colorsHash[hashLength] = newRegionHash;
+
+  return colorsHash;
+}
 
 function cloneCanvasContext(oldCanvas) {
 
@@ -41,7 +78,6 @@ function cloneCanvasContext(oldCanvas) {
     //return the new canvas
     return newCanvas.getContext('2d');
 }
-
 
 
 function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_size, color_variability){
@@ -67,25 +103,25 @@ function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_si
         if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor, color_variability)){ // top left
 
             res = searchPointByRegion(searchOptions);
-            if(res.start && res.end) foundRegions.push({start: res.start, end: res.end});
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({start: res.start, end: res.end});
             searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, p), targetColor, color_variability)) { // top right
 
             searchOptions.x = width - p; searchOptions.y = p;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
             searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, height - p), targetColor, color_variability)){ // bottom left
 
             searchOptions.x = p; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
             searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, height - p), targetColor, color_variability)) { // bottom right
 
             searchOptions.x = width - p; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
             searchOptions.ctx = res.context;
         }
         // from the middle of each edge to the center of the image
@@ -93,28 +129,31 @@ function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_si
 
             searchOptions.x = midW; searchOptions.y = p;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
             searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, midW, height - p), targetColor, color_variability)) { // mid bottom
 
             searchOptions.x = midW; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
             searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, midH), targetColor, color_variability)) { // left mid
 
             searchOptions.x = p; searchOptions.y = midH;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
             searchOptions.ctx = res.context;
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, midH), targetColor, color_variability)) { // right mid
 
             searchOptions.x = (width - p); searchOptions.y = midH;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions.push({ start: res.start, end: res.end });
+            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
             searchOptions.ctx = res.context;
         }
         p += sweep_size;//++;
+    }
+    for(let i = 0; i < foundRegions.length; ++i){ // double check the regions to make sure no overlaps
+        foundRegions = joinOverlappingRegions(foundRegions, foundRegions[i]);
     }
     return foundRegions;
 }
@@ -387,6 +426,8 @@ function rgbaAtImgCoordinate(ctx, x, y) {
 }
 
 
+
+
 // returns true if two rgba values are within the rgbaAllowedDelta (e.g. integer 2 (represents px)) of each other
 function colorMatch(rgba1, rgba2, rgbaAllowedDelta = 5) {
     if (!rgba1 || !rgba2) return false;
@@ -398,4 +439,44 @@ function colorMatch(rgba1, rgba2, rgbaAllowedDelta = 5) {
         );
 }
 
+
+
+// helper for allRegionsForColor and for mergeSimilarAndProximalColorRegions
+function joinOverlappingRegions(regions, newRegion, push = true){
+    let updated_existing = false;
+    for(let i = 0; i < regions.length; ++i){
+        let reg = regions[i];
+        if(rectsOverlap(reg, newRegion)) { // update the overlapping rects to be one big rect
+            reg.start[0] = min(reg.start[0],newRegion.start[0]);
+            reg.start[1] = min(reg.start[1], newRegion.start[1]);
+            reg.end[0] = max(reg.end[0], newRegion.end[0]);
+            reg.end[1] = max(reg.end[1], newRegion.end[1]);
+            regions[i] = reg;
+            updated_existing = true;
+        }
+    }
+    if(!updated_existing && push) regions.push(newRegion);
+
+    if(!push){                                          // if we're not updating directly we'll return more data
+        return {regions: regions, updated_existing: updated_existing};
+    } else {
+        return regions;
+    }
+}
+
+function rectsOverlap(r1, r2){
+    if(r1.start[0] > r2.end[0] || r2.start[0] > r1.end[0]) return false; // one rect is to left of other rect
+    if(r1.start[1] > r2.end[1] || r2.start[1] > r1.end[1]) return false; // one rect is above the other
+    return true;
+}
+
+function min(n1, n2) {
+    if(n1 > n2) return n2;
+    else return n1;
+}
+
+function max(n1, n2){
+    if(n1 > n2) return n1;
+    else return n2;
+}
 
