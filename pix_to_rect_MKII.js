@@ -23,17 +23,10 @@ function possibleRects(data, canvas, ctx, pivot_size, color_variability, backgro
 }
 
 // helper for possibleRects()
-function mergeSimilarAndProximalColorRegions(
-  colorsHash,
-  hashLength,
-  newRegionHash,
-  colorVariability
-) {
-  let new_regions = newRegionHash.regions;
-
-
-
+function mergeSimilarAndProximalColorRegions(colorsHash, hashLength, newRegionHash, colorVariability) {
+    let new_regions = newRegionHash.regions;
     let new_color = hexToRgb(newRegionHash.hex);
+
     for (let i = 0; i < hashLength; ++i) {
         if (colorMatch(hexToRgb(colorsHash[i].hex), new_color, colorVariability)) {
             // if the colors are in the right rgb range of each other
@@ -49,7 +42,6 @@ function mergeSimilarAndProximalColorRegions(
                         }
                     }
                 } // end comparison of new with old_regions
-
                 colorsHash[i].regions = old_regions; // revise the old_regions with new region area info
             }
         } // end old_regions update
@@ -214,20 +206,6 @@ function searchPointByRegion(options){
 // iterative inPlace floodSearch -- otherwise the browser can't deal with the stackframes/memory
 function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_size, color_variability) {
 
-    // thinking of refactoring to an options hash like the above searchPointByRegion function
-    // {
-    //     ctx, 
-    //     target_color, 
-    //     x, y, 
-    //     nullColor, 
-    //     width, 
-    //     height, 
-    //     sweep_size, 
-    //     color_variability
-    // }
-
-
-
     let Xs = [], Ys = []; // the best fit return values
 
     let stack = []; // stack is dfs, queue is bfs
@@ -236,9 +214,8 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
     while(stack.length > 0){
         let coord = stack.pop();
 
-        if (coord[0] && coord[1] && // coord[0] - sweep_size >= 0 && coord[1] - sweep_size >= 0 &&
-            // coord[0] + sweep_size < width && coord[1] + sweep_size < height &&
-            scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
+         // coord[0] - sweep_size >= 0 && coord[1] - sweep_size >= 0 && coord[0] + sweep_size < width && coord[1] + sweep_size < height &&
+        if (coord[0] && coord[1] && scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
           ctx = colorCTX(ctx, coord[0], coord[1], nullColor);
           if (Xs.length < 2) {
             // Update the rectangle x coordinates in O(3) time and O(3) space
