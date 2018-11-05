@@ -23,4 +23,4 @@
     - Uses a pivot algorithm in concert with a seed-fill algorithm and random sampling to generate statistically likely color groups from an array of pixels.
         - After generating color groups CSS and HTML files are generated using the relative height, width and position of each color region
     
-     ![Sample Generated Image](demoYellow.png "Sample Generated Image")
+![Sample Generated Image](demoYellow.png "Sample Generated Image")
