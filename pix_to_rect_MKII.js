@@ -236,8 +236,8 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
     while(stack.length > 0){
         let coord = stack.pop();
 
-        if (coord[0] && coord[1] && coord[0] - sweep_size >= 0 && coord[1] - sweep_size >= 0 &&
-            coord[0] + sweep_size < width && coord[1] + sweep_size < height &&
+        if (coord[0] && coord[1] && // coord[0] - sweep_size >= 0 && coord[1] - sweep_size >= 0 &&
+            // coord[0] + sweep_size < width && coord[1] + sweep_size < height &&
             scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
           ctx = colorCTX(ctx, coord[0], coord[1], nullColor);
           if (Xs.length < 2) {
