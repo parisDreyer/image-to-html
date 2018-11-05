@@ -30,28 +30,34 @@ function mergeSimilarAndProximalColorRegions(
   colorVariability
 ) {
   let new_regions = newRegionHash.regions;
-  let new_color = hexToRgb(newRegionHash.hex);
-  for (let i = 0; i < hashLength; ++i) {
-    if (colorMatch(hexToRgb(colorsHash[i].hex), new_color, colorVariability)) {
-      // if the colors are in the right rgb range of each other
-      let old_regions = colorsHash[i].regions;
 
-      for (let z = 0; z < new_regions.length; ++z) {
-        if (new_regions[z]) {
-          // if not previously joined
-          let res = joinOverlappingRegions(old_regions, new_regions[z], false);
-          if (res.updated_existing) {
-            new_regions[z] = null; // no longer need this region because was joined
-            old_regions = res.regions; // updated
-          }
-        }
-      } // end comparison of new with old_regions
 
-      colorsHash[i].regions = old_regions; // revise the old_regions with new region area info
-    } // end old_regions update
-  }
 
-  newRegionHash.regions = new_regions.filter(reg => reg); // only update with the regions that did not overlap (were not set to false)
+    let new_color = hexToRgb(newRegionHash.hex);
+    for (let i = 0; i < hashLength; ++i) {
+        if (colorMatch(hexToRgb(colorsHash[i].hex), new_color, colorVariability)) {
+            // if the colors are in the right rgb range of each other
+            let old_regions = colorsHash[i].regions;
+            if(old_regions.length > 0){
+                for (let z = 0; z < new_regions.length; ++z) {
+                    if (new_regions[z]) {
+                        // if not previously joined
+                        let res = joinOverlappingRegions(old_regions, new_regions[z], false);
+                        if (res.updated_existing) {
+                            new_regions[z] = null; // no longer need this region because was joined
+                            old_regions = res.regions; // updated
+                        }
+                    }
+                } // end comparison of new with old_regions
+
+                colorsHash[i].regions = old_regions; // revise the old_regions with new region area info
+            }
+        } // end old_regions update
+    }
+
+    newRegionHash.regions = new_regions.filter(reg => reg); // only update with the regions that did not overlap (were not set to false)
+    
+  
   colorsHash[hashLength] = newRegionHash;
 
   return colorsHash;
@@ -103,52 +109,68 @@ function allRegionsForColor(ctx, targetColor, height, width, nullColor, sweep_si
         if(colorMatch(rgbaAtImgCoordinate(ctx, p,p), targetColor, color_variability)){ // top left
 
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({start: res.start, end: res.end});
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({start: res.start, end: res.end});
+                searchOptions.ctx = res.context;
+            }
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, p), targetColor, color_variability)) { // top right
 
             searchOptions.x = width - p; searchOptions.y = p;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
+                searchOptions.ctx = res.context;
+            }
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, height - p), targetColor, color_variability)){ // bottom left
 
             searchOptions.x = p; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
+                searchOptions.ctx = res.context;
+            }
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, height - p), targetColor, color_variability)) { // bottom right
 
             searchOptions.x = width - p; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
+                searchOptions.ctx = res.context;
+            }
         }
         // from the middle of each edge to the center of the image
         if (colorMatch(rgbaAtImgCoordinate(ctx, midW, p), targetColor, color_variability)) { // mid top
 
             searchOptions.x = midW; searchOptions.y = p;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
+                searchOptions.ctx = res.context;
+            }
         } if (colorMatch(rgbaAtImgCoordinate(ctx, midW, height - p), targetColor, color_variability)) { // mid bottom
 
             searchOptions.x = midW; searchOptions.y = (height - p);
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
+                searchOptions.ctx = res.context;
+            }
         } if (colorMatch(rgbaAtImgCoordinate(ctx, p, midH), targetColor, color_variability)) { // left mid
 
             searchOptions.x = p; searchOptions.y = midH;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
+                searchOptions.ctx = res.context;
+            }
         } if (colorMatch(rgbaAtImgCoordinate(ctx, width - p, midH), targetColor, color_variability)) { // right mid
 
             searchOptions.x = (width - p); searchOptions.y = midH;
             res = searchPointByRegion(searchOptions);
-            if (res.start && res.end) foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
-            searchOptions.ctx = res.context;
+            if (res.start && res.end && res.start.length > 1 && res.end.length > 1) {
+                foundRegions = joinOverlappingRegions(foundRegions, { start: res.start, end: res.end });//foundRegions.push({ start: res.start, end: res.end });
+                searchOptions.ctx = res.context;
+            }
         }
         p += sweep_size;//++;
     }
@@ -174,11 +196,14 @@ function searchPointByRegion(options){
 
     ctx = res.context;
     
-    let xmin = res.xs[0], ymin = res.ys[0];
-    let xmax = res.xs[1], ymax = res.ys[1];
+    
+    if (res.xs.length > 1 && res.ys.length > 1){ 
+        let xmin = res.xs[0], ymin = res.ys[0];
+        let xmax = res.xs[1], ymax = res.ys[1];
 
-    if (xmin != xmax && ymin != ymax) return { start: [xmin, ymin], end: [xmax, ymax], context: ctx };
-    else return { start: false, end: false, context: ctx };
+        if (xmin != xmax && ymin != ymax) return { start: [xmin, ymin], end: [xmax, ymax], context: ctx };
+        else return { start: false, end: false, context: ctx };
+    } else return { start: false, end: false, context: ctx };
 }
 
 
@@ -210,90 +235,114 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
     let alreadySeen = [[x,y]];
     while(stack.length > 0){
         let coord = stack.pop();
-        let nxtColor = rgbaAtImgCoordinate(ctx, coord[0], coord[1]);
 
-        //if (nxtColor && colorMatch(nxtColor, target_color, color_variability)) {
-        if (scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
-            ctx = colorCTX(ctx, coord[0], coord[1], nullColor);
-            if(Xs.length < 2) { // Update the rectangle x coordinates in O(3) time and O(3) space
-                Xs.push(coord[0]);
-                if(Xs.length == 2){
-                    if(Xs[0] > Xs[1]) {
-                        let min = Xs[1];
-                        let max = Xs[0];
-                        Xs[0] = min;
-                        Xs[1] = max;
-                    }
-                }
-            } else{
-                if (Xs[0] > coord[0]) Xs[0] = coord[0];
-                else if (Xs[1] < coord[0]) Xs[1] = coord[0];
+        if (coord[0] && coord[1] && coord[0] - sweep_size >= 0 && coord[1] - sweep_size >= 0 &&
+            coord[0] + sweep_size < width && coord[1] + sweep_size < height &&
+            scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
+          ctx = colorCTX(ctx, coord[0], coord[1], nullColor);
+          if (Xs.length < 2) {
+            // Update the rectangle x coordinates in O(3) time and O(3) space
+            Xs.push(coord[0]);
+            if (Xs.length == 2) {
+              if (Xs[0] > Xs[1]) {
+                let min = Xs[1];
+                let max = Xs[0];
+                Xs[0] = min;
+                Xs[1] = max;
+              }
             }
+          } else {
+            if (Xs[0] > coord[0]) Xs[0] = coord[0];
+            else if (Xs[1] < coord[0]) Xs[1] = coord[0];
+          }
 
-            if (Ys.length < 2) {  // Update the rectangle y coordinates in O(3) time and O(3) space
-                Ys.push(coord[1]);
-                if (Ys.length == 2) {
-                    if (Ys[0] > Ys[1]) {
-                        let min = Ys[1];
-                        let max = Ys[0];
-                        Ys[0] = min;
-                        Ys[1] = max;
-                    }
-                }
-            } else {
-                if (Ys[0] > coord[1]) Ys[0] = coord[1];
-                else if (Ys[1] < coord[1]) Ys[1] = coord[1];
+          if (Ys.length < 2) {
+            // Update the rectangle y coordinates in O(3) time and O(3) space
+            Ys.push(coord[1]);
+            if (Ys.length == 2) {
+              if (Ys[0] > Ys[1]) {
+                let min = Ys[1];
+                let max = Ys[0];
+                Ys[0] = min;
+                Ys[1] = max;
+              }
             }
-            
+          } else {
+            if (Ys[0] > coord[1]) Ys[0] = coord[1];
+            else if (Ys[1] < coord[1]) Ys[1] = coord[1];
+          }
 
+          let minX = Xs[0];
+          let minY = Ys[0];
+          let lstX = Xs[1];
+          let lstY = Ys[1];
 
-            let minX = Xs[0];
-            let minY = Ys[0];
-            let lstX = Xs[1];
-            let lstY = Ys[1];
+          // grow search area from currently described rect in 8 Directions
 
-            // grow search area from currently described rect in 8 Directions
-
-            // upper left left
-             if (minX > sweep_size && !arrHasCoord(alreadySeen, [minX - sweep_size, minY])) {
-                stack.push([minX-sweep_size, minY]);
-                alreadySeen.push([minX-sweep_size, minY]);
-            }
-            // upper right right
-             if (lstX < width - sweep_size && !arrHasCoord(alreadySeen, [lstX + sweep_size, minY])) {
-                stack.push([lstX+sweep_size, minY]);
-                alreadySeen.push([lstX + sweep_size, minY]);
-            }
-            // upper right up
-             if (minY > sweep_size && !arrHasCoord(alreadySeen, [lstX, minY - sweep_size])) {
-                stack.push([lstX, minY - sweep_size]);
-                alreadySeen.push([lstX, minY - sweep_size]);
-            }
-            // upper left up
-             if (minY > sweep_size && !arrHasCoord(alreadySeen, [minX, minY - sweep_size])) {
-                stack.push([minX, minY - sweep_size]);
-                alreadySeen.push([minX, minY - sweep_size]);
-            }
-            // lower right lower
-             if (lstY < height - sweep_size && !arrHasCoord(alreadySeen, [lstX, lstY + sweep_size])) {
-                stack.push([lstX, lstY + sweep_size]);
-                alreadySeen.push([lstX, lstY + sweep_size]);
-            }
-            // lower right right
-             if (lstX < width - sweep_size && lstY < height - sweep_size && !arrHasCoord(alreadySeen, [lstX + sweep_size, lstY])) {
-                stack.push([lstX + sweep_size, lstY]);
-                alreadySeen.push([lstX, lstY + sweep_size]);
-            }
-            // lower left left
-             if (minX > sweep_size && lstY < height && !arrHasCoord(alreadySeen, [minX - sweep_size, lstY])) {
-                stack.push([minX - sweep_size, lstY]);
-                alreadySeen.push([minX - sweep_size, lstY]);
-            }
-            // lower left lower
-             if (minX > 0 && lstY < height - sweep_size && !arrHasCoord(alreadySeen, [minX, lstY + sweep_size])) {
-                stack.push([minX, lstY + sweep_size]);
-                alreadySeen.push([minX, lstY + sweep_size]);
-            }
+          // upper left left
+          if (minX > sweep_size && !arrHasCoord(alreadySeen, [
+              minX - sweep_size,
+              minY
+            ])) {
+            stack.push([minX - sweep_size, minY]);
+            alreadySeen.push([minX - sweep_size, minY]);
+          }
+          // upper right right
+          if (lstX < width - sweep_size && !arrHasCoord(alreadySeen, [
+              lstX + sweep_size,
+              minY
+            ])) {
+            stack.push([lstX + sweep_size, minY]);
+            alreadySeen.push([lstX + sweep_size, minY]);
+          }
+          // upper right up
+          if (minY > sweep_size && !arrHasCoord(alreadySeen, [
+              lstX,
+              minY - sweep_size
+            ])) {
+            stack.push([lstX, minY - sweep_size]);
+            alreadySeen.push([lstX, minY - sweep_size]);
+          }
+          // upper left up
+          if (minY > sweep_size && !arrHasCoord(alreadySeen, [
+              minX,
+              minY - sweep_size
+            ])) {
+            stack.push([minX, minY - sweep_size]);
+            alreadySeen.push([minX, minY - sweep_size]);
+          }
+          // lower right lower
+          if (lstY < height - sweep_size && !arrHasCoord(alreadySeen, [
+              lstX,
+              lstY + sweep_size
+            ])) {
+            stack.push([lstX, lstY + sweep_size]);
+            alreadySeen.push([lstX, lstY + sweep_size]);
+          }
+          // lower right right
+          if (lstX < width - sweep_size && lstY < height - sweep_size && !arrHasCoord(
+              alreadySeen,
+              [lstX + sweep_size, lstY]
+            )) {
+            stack.push([lstX + sweep_size, lstY]);
+              alreadySeen.push([lstX + sweep_size, lstY]);
+          }
+          // lower left left
+          if (minX > sweep_size && lstY < height && !arrHasCoord(
+              alreadySeen,
+              [minX - sweep_size, lstY]
+            )) {
+            stack.push([minX - sweep_size, lstY]);
+            alreadySeen.push([minX - sweep_size, lstY]);
+          }
+          // lower left lower
+          if (minX > 0 && lstY < height - sweep_size && !arrHasCoord(
+              alreadySeen,
+              [minX, lstY + sweep_size]
+            )) {
+            stack.push([minX, lstY + sweep_size]);
+            alreadySeen.push([minX, lstY + sweep_size]);
+          }
         }
     }
     return { xs: Xs, ys: Ys, context: ctx };
@@ -444,6 +493,7 @@ function colorMatch(rgba1, rgba2, rgbaAllowedDelta = 5) {
 // helper for allRegionsForColor and for mergeSimilarAndProximalColorRegions
 function joinOverlappingRegions(regions, newRegion, push = true){
     let updated_existing = false;
+
     for(let i = 0; i < regions.length; ++i){
         let reg = regions[i];
         if(rectsOverlap(reg, newRegion)) { // update the overlapping rects to be one big rect
