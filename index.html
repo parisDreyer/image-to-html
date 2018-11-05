@@ -19,14 +19,14 @@
         <label id="pivot-size-label">
             Pivot-Size (i.e. the number of pixels skipped when scanning)
             <div class="flex-row-space-between">
-                <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="4" onchange="changePivotRadiusDisplay()">
+                <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="2" onchange="changePivotRadiusDisplay()">
                 <div id="pivot-radius-display"></div>
             </div>
         </label>
         <br/>
         <label id="color-variability-label">
             Color Variability (i.e. the flexibility of a pixel match when scanning)
-            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="12" onchange="changeVariabilityLabel()">
+            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="0" onchange="changeVariabilityLabel()">
         </label>
         <br/>
         <label id="background-color-selector">
@@ -200,8 +200,8 @@
             appendImage(imagePath).onload = () => {
                 const data = imageData(document.getElementById("model-image"));
 
-                let pivot_size = document.getElementById("scanning-pivot-size").value || "4";
-                let color_variability = document.getElementById("color-variability").value || "12";
+                let pivot_size = document.getElementById("scanning-pivot-size").value || "2";
+                let color_variability = document.getElementById("color-variability").value || "0";
 
                 let csl = document.getElementById('color-selector');
                 let background_color = csl.selectedIndex > 0 ? [csl.selectedIndex].value : { red: 255, blue: 255, green: 255 };

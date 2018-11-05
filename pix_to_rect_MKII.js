@@ -214,7 +214,7 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
     while(stack.length > 0){
         let coord = stack.pop();
 
-         // coord[0] - sweep_size >= 0 && coord[1] - sweep_size >= 0 && coord[0] + sweep_size < width && coord[1] + sweep_size < height &&
+         // coord[0] && coord[1] && coord[0] - sweep_size >= 0 && coord[1] - sweep_size >= 0 && coord[0] + sweep_size < width && coord[1] + sweep_size < height &&
         if (coord[0] && coord[1] && scanForSimilarFromPoint(ctx, coord, target_color, sweep_size, color_variability)) {
           ctx = colorCTX(ctx, coord[0], coord[1], nullColor);
           if (Xs.length < 2) {
@@ -302,7 +302,7 @@ function floodSearch(ctx, target_color, x, y, nullColor, width, height, sweep_si
               [lstX + sweep_size, lstY]
             )) {
             stack.push([lstX + sweep_size, lstY]);
-              alreadySeen.push([lstX + sweep_size, lstY]);
+            alreadySeen.push([lstX + sweep_size, lstY]);
           }
           // lower left left
           if (minX > sweep_size && lstY < height && !arrHasCoord(
@@ -335,13 +335,13 @@ function arrHasCoord(arr, coord){       // helper floodSearch to not search an a
 // searches by average color in area
 // returns coordinate of similar pixel or false within pivot range of an [x,y] point
 function scanForSimilarFromPoint(ctx, point, rgb, pivot, color_variability){
-
-    let ul = [point[0] - pivot, point[1] - pivot];                          // upper left
-    let br = [point[0] + pivot, point[1] + pivot];                          // bottom right
+    let part = Math.floor(pivot / 2);
+    let ul = [point[0] - part, point[1] - part];                          // upper left
+    let br = [point[0] + part, point[1] + part];                          // bottom right
     let count = colorOccurrenceInArea(ctx, rgb, ul, br, color_variability); // check if average color is similar to target color
-    let thrd_area = Math.floor(((pivot) * (pivot)) / 3);
+    let area = Math.floor((part) * (part));
 
-    return count >= thrd_area;
+    return count >= area;
 
 }
 
