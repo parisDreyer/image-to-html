@@ -3,7 +3,6 @@ function possibleRects(data, canvas, ctx, pivot_size, color_variability, backgro
     // let avgColor = getAverageRGB(data.data);
     // let topLeftColor = rgbaAtImgCoordinate(ctx, 0, 0);
     let allColors = getAllColors(data.data);
-    console.log(allColors);
 
     let colorRegions = {};
     for(let i = 0; i < allColors.length; ++i){

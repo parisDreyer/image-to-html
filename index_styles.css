@@ -6,7 +6,7 @@ body{
 #main{
     display: flex;
     font-style: sans-serif;
-    font-size: 2rem;
+    font-size: 1rem;
     justify-content: center;
     text-align: center;
     flex-direction: column;
@@ -28,17 +28,17 @@ body{
     align-items: center;
     text-align: center;
     background: #fcf1d6;
-    padding: 4rem;
+    padding: 2rem;
     height: auto;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     border-radius: 2rem 0;
     box-shadow: 3px 3px 3px #25272b;
     min-width: 400px;
 }
 
 .header h1{
-    font-size: 4rem;
+    font-size: 2rem;
     padding: 0;
     margin-top: 0;
     margin-bottom: 1rem;
@@ -46,16 +46,19 @@ body{
 .header h2{
     padding: 0;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.2rem;
 }
 
 
 #main input, select {
-    width: 8rem;
-    height: 4rem;
+    width: 6rem;
+    height: 2rem;
     padding-left: 1rem;
     font: inherit;
     box-shadow: 1.5px 1.5px 1.5px #3b4046;
+}
+#main input[type='range'] {
+    padding-left: 0;
 }
 select {
     margin-top: 1rem;
@@ -64,8 +67,8 @@ select {
 }
 
 #pivot-radius-display{
-  height: 4rem;
-  width: 4rem;
+  height: 4px;
+  width: 4px;
   margin-top: 2rem;
   margin-left: 3rem;
   background-color: #fbc034;
@@ -84,10 +87,10 @@ select {
     justify-content: center;
     align-items: center;
     background: #fbc034;
-    padding-left: 3rem;
-    padding-right: 3rem;
-    padding-top: 3rem;
-    padding-bottom: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 1.5rem;
     border-radius: 4rem 8rem 6rem;
     box-shadow: 3px 3px 3px #3b4046;
 }
@@ -98,8 +101,8 @@ select {
 }
 
 #main button {
-    width: 16rem;
-    height: 8rem;
+    width: 8rem;
+    height: 4rem;
     font: inherit;
     background-color: #f3f3ff;
     border: 1px solid #8a8a8a;

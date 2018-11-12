@@ -19,7 +19,7 @@
         <label id="pivot-size-label">
             Pivot-Size (i.e. the number of pixels skipped when scanning)
             <div class="flex-row-space-between">
-                <input id="scanning-pivot-size" class="top-marg2rem" type="integer" placeholder="2" onchange="changePivotRadiusDisplay()">
+                <input id="scanning-pivot-size" class="top-marg2rem" type="range" min="1" max="42" value="2" onchange="changePivotRadiusDisplay()">
                 <div id="pivot-radius-display"></div>
             </div>
         </label>
@@ -199,7 +199,6 @@
             
             appendImage(imagePath).onload = () => {
                 const data = imageData(document.getElementById("model-image"));
-
                 let pivot_size = document.getElementById("scanning-pivot-size").value || "2";
                 let color_variability = document.getElementById("color-variability").value || "0";
 
@@ -209,7 +208,6 @@
                 let rects = possibleRects(data.pixels, 
                     data.canvas, data.context, parseFloat(pivot_size), 
                     parseFloat(color_variability), background_color);
-                console.log(rects);
 
 
                 let html_and_css = HTMLandCSSstrings(rects, data.width, data.height);
@@ -218,14 +216,8 @@
                 let autoGenWindowDisplay = window.open();
                 autoGenWindowDisplay.document.write(`<head><title>Generated CSS</title><style>${html_and_css.cssStr}</style></head>`);
                 autoGenWindowDisplay.document.write(html_and_css.htmlStr);
-
-                console.log(html_and_css);
             }
         }
-
-
-        
-
 
         function changeBkgrndColorSelectorLabel(){
             let csl = document.getElementById('color-selector');
@@ -249,7 +241,6 @@
         function changeVariabilityLabel(csl = null, lightenFont = null){
             csl = csl ? csl : document.getElementById('color-selector'); // bkgrnd color 
             let base = hexToRgb(csl[csl.selectedIndex].value);//hexToRgb("#fbc034");
-            console.log('base', base);
             let cvLabel = document.getElementById("color-variability-label");
             let cvVari = document.getElementById("color-variability").value || "0";
             cvVari = parseFloat(cvVari);
@@ -294,10 +285,10 @@
 
         function changePivotRadiusDisplay(newcolor = null){
             let  ss = document.getElementById("scanning-pivot-size").value || "4";
-            ss = parseFloat(ss)
+            ss = parseFloat(ss);
             let prd = document.getElementById("pivot-radius-display");
-            prd.style.height = `${ss}rem`;
-            prd.style.width = `${ss}rem`;
+            prd.style.height = `${ss}px`;
+            prd.style.width = `${ss}px`;
             if(newcolor){
                 prd.style.background = newcolor;
             }
@@ -305,15 +296,15 @@
 
 
         function hexToRgb(hex) { // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-                return result
-                    ? {
-                        red: parseInt(result[1], 16),
-                        green: parseInt(result[2], 16),
-                        blue: parseInt(result[3], 16)
-                    }
-                    : null;
-            }
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result
+                ? {
+                    red: parseInt(result[1], 16),
+                    green: parseInt(result[2], 16),
+                    blue: parseInt(result[3], 16)
+                }
+                : null;
+        }
     </script>
 </body>
 </html>

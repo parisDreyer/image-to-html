@@ -19,7 +19,6 @@ function appendImage(model_image){
 
 
 function imageData(img) {
-  // console.log(img);
   const [canvas, ctx] = canvasAndContext();
 
   const [imgWdth, imgHght] = [
