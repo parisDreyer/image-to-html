@@ -17,7 +17,17 @@
         <canvas id="canvas", width="0" height="0" style="border:1px solid #000"></canvas>
         <br />
         <label id="pivot-size-label">
-            Pivot-Size (i.e. the number of pixels skipped when scanning)
+            <div class="info-wrap-container">
+                Pivot-Size
+                <div class="info-wrap">
+                    <div class="info">
+                        the number of pixels skipped when scanning <br/>
+                        slide the slider to adjust the radius from 2 up to 42<br/>
+                        the larger the radius the less detailed the image <br/>
+                        the default value is 2 (works most of the time) <br/>
+                    </div>
+                </div>
+            </div>
             <div class="flex-row-space-between">
                 <input id="scanning-pivot-size" class="top-marg2rem" type="range" min="1" max="42" value="2" onchange="changePivotRadiusDisplay()">
                 <div id="pivot-radius-display"></div>
@@ -25,12 +35,35 @@
         </label>
         <br/>
         <label id="color-variability-label">
-            Color Variability (i.e. the flexibility of a pixel match when scanning)
+                        <div class="info-wrap-container">
+                            Color Variability
+                            <div class="info-wrap">
+                                <div class="info">
+                                    The flexibility of a pixel match when scanning <br/>
+                                    The result is evaluated to a number between 0 and 255 <br />
+                                    the closer to 0 the more colors are identified as unique<br/>
+                                    The closer to 255 the more numbers are consolidated into one rectangle <br/>
+                                </div>
+                            </div>
+                        </div>
             <input id="color-variability" class="top-marg2rem" type="integer" placeholder="0" onchange="changeVariabilityLabel()">
         </label>
         <br/>
         <label id="background-color-selector">
-            Background Color (the color that gets ignored when parsing the image)
+            <div class="info-wrap-container">
+                Background Color
+                <div class="info-wrap">
+                    <div class="info">
+                        The color that gets ignored when parsing the image <br/>
+                        Any pixel value (i.e. rgb(0->255, 0->255, 0->255)) 
+                        within the Color Variability range (the slider above) <br/>
+                        of the background color (chosen in this drop-down selector) <br />
+                        e.g: if the color is rgb(25,25,25) and the variability is 10 <br />
+                        then anything between rgb(15,15,15) and rgb(35,35,35)
+                    </div>
+                </div>
+            </div>
+            
             <select id="color-selector" onchange="changeBkgrndColorSelectorLabel()">
                 <option value="#fbc034"></option>
                 <option value="#FFFFFF">White</option>
@@ -185,7 +218,18 @@
         </label>
         <br/>
         <label>
-            Image file-path (place any img link here)
+            <div class="info-wrap-container">
+                Image file-path
+                <div class="info-wrap">
+                    <div class="info">
+                        Click the [Analyze Img] buton for a demo <br/>
+                        Place any image link here, and the generator will attempt <br/>
+                        to render an html and css webpage that looks like the image <br/>
+                        Multiple solid color rectangles works best. <br/>
+                        Click the [Analyze Img] button when you have input a filepath you want to analyze <br/> 
+                    </div>
+                </div>
+            </div>
             <input id="image-path" class="top-marg2rem" type="text" placeholder="./template_examples/template1.png" />
         </label>
         <br/>
