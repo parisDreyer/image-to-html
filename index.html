@@ -2,6 +2,8 @@
 <html>
 <head>
     <Link rel="stylesheet" type="text/css" href="./index_styles.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
 </head>
 <body>
     <script src="./img_to_pixel.js"></script>
@@ -14,7 +16,7 @@
 
     <div id="main">
         <img id="model-image" src="" width="auto" height="auto"/>
-        <canvas id="canvas", width="0" height="0" style="border:1px solid #000"></canvas>
+        <canvas id="canvas" class="hidden-canvas" width="0" height="0" style="border:1px solid #000"></canvas>
         <br />
         <label id="pivot-size-label">
             <div class="info-wrap-container">
@@ -237,11 +239,14 @@
         <button onClick="logImageData()">Analyze Img</button>
         <div id="clips"></div>
     </div>
+    <div id="demo-page-section"></div>
     <script>
         function logImageData() {
             const imagePath = document.getElementById("image-path").value || "template_examples/template1.png";
             
             appendImage(imagePath).onload = () => {
+                
+
                 const data = imageData(document.getElementById("model-image"));
                 let pivot_size = document.getElementById("scanning-pivot-size").value || "2";
                 let color_variability = document.getElementById("color-variability").value || "0";
@@ -260,7 +265,29 @@
                 let autoGenWindowDisplay = window.open();
                 autoGenWindowDisplay.document.write(`<head><title>Generated CSS</title><style>${html_and_css.cssStr}</style></head>`);
                 autoGenWindowDisplay.document.write(html_and_css.htmlStr);
+
+                // write the style to this page
+                addStyle(html_and_css.cssStr);
+                let demo_doc = document.getElementById("demo-page-section");
+                demo_doc.innerHTML = html_and_css.htmlStr;
             }
+        }
+
+
+        function addStyle(styleStr){
+            const css = styleStr;
+                head = document.head || document.getElementsByTagName('head')[0],
+                style = document.createElement('style');
+
+            style.type = 'text/css';
+            if (style.styleSheet) {
+                // This is required for IE8 and below.
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+
+            head.appendChild(style);
         }
 
         function changeBkgrndColorSelectorLabel(){
