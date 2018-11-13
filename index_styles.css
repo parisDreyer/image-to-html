@@ -100,7 +100,7 @@ select {
   width: 4px;
   margin-top: 2rem;
   margin-left: 3rem;
-  background-color: #fbc034;
+  background-color: #C0C0C0;
   border: 2px solid #3b4046;
   border-radius: 50%;
 }
@@ -128,7 +128,7 @@ select {
 
 #main #image-path {
     max-width: 32rem;
-    min-width: 460px;
+    width: 240px;
 }
 
 #main button {
@@ -170,6 +170,7 @@ select {
     border-radius: 8px;
     padding: 4px;
     max-width: 300px;
+    min-width:120px;
 }
 
 .top-marg2rem{

@@ -76,7 +76,8 @@
                                     </div>
                                 </div>
                             </div>
-                <input id="color-variability" class="top-marg2rem" type="integer" placeholder="0" onchange="changeVariabilityLabel()">
+                <!-- <input id="color-variability" class="top-marg2rem" type="integer" placeholder="0" onchange="changeVariabilityLabel()"> -->
+                <input id="color-variability" class="top-marg2rem" type="range" min="0" max="255" value="0" onchange="changeVariabilityLabel()"/>
             </label>
         </div>
         <br/>
@@ -276,7 +277,8 @@
                     <div class="info-wrap">
                         <div class="info">
                             Click the [Analyze Img] buton for a demo <br/>
-                            Place any image link here, and the generator will attempt <br/>
+                            Copy and paste the absolute path to an image file on the internet then click the "Analyze Image" Button to create HTML from the image<br/>
+                            Place any image link in the text-input field on the right, and the generator will attempt <br/>
                             to render an html and css webpage that looks like the image <br/>
                             Multiple solid color rectangles works best. <br/>
                             Click the [Analyze Img] button when you have input a filepath you want to analyze <br/> 
@@ -299,7 +301,6 @@
     <div class="flex-center-item-container">
         <div class="form-group">
             <div class="static-info">
-                <br />
                 The area to the right of this info-text holds the image that is analyzed <br />
                 Once the image is analyzed a sample of the generated HTML is rendered below <br/>
             </div>
@@ -452,7 +453,6 @@
         function showOptionsForm(){
             let opts = document.getElementById("option-input-forms");
             let ifo = document.getElementById("options-btn-info");
-            console.log(opts.style.display);
             if(opts.style.display === "none"){
                 opts.style="display:block";
                 ifo.innerHTML = "^ Click to Hide Options"
