@@ -13,232 +13,298 @@
         <h1>Image-to-HTML</h1>
         <h2>Generates an HTML and CSS Webpage from an Image</h2>
     </div>
-
     <div id="main">
-        <label id="pivot-size-label">
-            <div class="info-wrap-container">
-                Pivot-Size
-                <div class="info-wrap">
-                    <div class="info">
-                        the number of pixels skipped when scanning <br/>
-                        slide the slider to adjust the radius from 2 up to 42<br/>
-                        the larger the radius the less detailed the image <br/>
-                        the default value is 2 (works most of the time) <br/>
-                    </div>
+        <div>
+            <button class="show-options-btn" onClick="showOptionsForm()">Refine Defaults</button>
+            <div id="options-btn-info" class="static-info" onClick="showOptionsForm()">^ Click for Options</div>
+        </div>
+        <div id="option-input-forms" style="display:none">
+            <div class="form-group">
+                <div id="options-btn-info" class="static-info">
+                    Below are four options forms: <br/>
+                    1. <a class="form-link" href="#pivot-size-label">Pivot-Size</a> <br />
+                    2. <a class="form-link" href="#color-variability-label">Color Variability</a><br />
+                    3. <a class="form-link" href="#bgc">Background Color</a><br />
+                    4. <a class="form-link" href="#image-path">Image Path</a><br />
                 </div>
             </div>
-            <div class="flex-row-space-between">
-                <input id="scanning-pivot-size" class="top-marg2rem" type="range" min="1" max="42" value="2" onchange="changePivotRadiusDisplay()">
-                <div id="pivot-radius-display"></div>
+        <div class="form-group">
+            <div class="static-info">
+                <br/>
+                the number of pixels skipped when scanning
+                slide the slider to adjust the radius from 2 up to 42
+                the larger the radius the less detailed the image
+                the default value is 2 (works most of the time)
             </div>
-        </label>
+            <label id="pivot-size-label">
+                <div class="info-wrap-container">
+                    Pivot-Size
+                    <div class="info-wrap">
+                        <div class="info">
+                            the number of pixels skipped when scanning <br/>
+                            slide the slider to adjust the radius from 2 up to 42<br/>
+                            the larger the radius the less detailed the image <br/>
+                            the default value is 2 (works most of the time) <br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-row-space-between">
+                    <input id="scanning-pivot-size" class="top-marg2rem" type="range" min="1" max="42" value="2" onchange="changePivotRadiusDisplay()">
+                    <div id="pivot-radius-display"></div>
+                </div>
+            </label>
+        </div>
         <br/>
-        <label id="color-variability-label">
-                        <div class="info-wrap-container">
-                            Color Variability
-                            <div class="info-wrap">
-                                <div class="info">
-                                    The flexibility of a pixel match when scanning <br/>
-                                    The result is evaluated to a number between 0 and 255 <br />
-                                    the closer to 0 the more colors are identified as unique<br/>
-                                    The closer to 255 the more numbers are consolidated into one rectangle <br/>
+        <div class="form-group">
+            <div class="static-info">
+                <br />
+                The flexibility of a pixel match when scanning
+                The result is evaluated to a number between 0 and 255
+                the closer to 0 the more colors are identified as unique
+                The closer to 255 the more numbers are consolidated into one rectangle
+
+            </div>
+            <label id="color-variability-label">
+                            <div class="info-wrap-container">
+                                Color Variability
+                                <div class="info-wrap">
+                                    <div class="info">
+                                        The flexibility of a pixel match when scanning <br/>
+                                        The result is evaluated to a number between 0 and 255 <br />
+                                        the closer to 0 the more colors are identified as unique<br/>
+                                        The closer to 255 the more numbers are consolidated into one rectangle <br/>
+                                    </div>
                                 </div>
                             </div>
+                <input id="color-variability" class="top-marg2rem" type="integer" placeholder="0" onchange="changeVariabilityLabel()">
+            </label>
+        </div>
+        <br/>
+        <div class="form-group">
+            <div class="static-info">
+                <br/>
+                The color that gets ignored when parsing the image
+                Any pixel value (i.e. rgb(0->255, 0->255, 0->255)) within the Color Variability range (the slider above)
+                of the background color (chosen in this drop-down selector)
+                e.g: if the color is rgb(25,25,25) and the variability is 10
+                then anything between rgb(15,15,15) and rgb(35,35,35)
+            </div>
+            <label id="background-color-selector">
+                <div id="bgc" class="info-wrap-container">
+                    Background Color
+                    <div class="info-wrap">
+                        <div class="info">
+                            The color that gets ignored when parsing the image <br/>
+                            Any pixel value (i.e. rgb(0->255, 0->255, 0->255)) 
+                            within the Color Variability range (the slider above) <br/>
+                            of the background color (chosen in this drop-down selector) <br />
+                            e.g: if the color is rgb(25,25,25) and the variability is 10 <br />
+                            then anything between rgb(15,15,15) and rgb(35,35,35)
                         </div>
-            <input id="color-variability" class="top-marg2rem" type="integer" placeholder="0" onchange="changeVariabilityLabel()">
-        </label>
-        <br/>
-        <label id="background-color-selector">
-            <div class="info-wrap-container">
-                Background Color
-                <div class="info-wrap">
-                    <div class="info">
-                        The color that gets ignored when parsing the image <br/>
-                        Any pixel value (i.e. rgb(0->255, 0->255, 0->255)) 
-                        within the Color Variability range (the slider above) <br/>
-                        of the background color (chosen in this drop-down selector) <br />
-                        e.g: if the color is rgb(25,25,25) and the variability is 10 <br />
-                        then anything between rgb(15,15,15) and rgb(35,35,35)
                     </div>
                 </div>
-            </div>
-            
-            <select id="color-selector" onchange="changeBkgrndColorSelectorLabel()">
-                <option value="#fbc034"></option>
-                <option value="#FFFFFF">White</option>
-                <option value="#FF0000">Red</option>
-                <option value="#0000FF">Blue</option>
-                <option value="#008000">Green</option>
-                <option value="#000000">Black</option>
-                <option value="#E6E6FA">Lavender</option>
-                <option value="#D8BFD8">Thistle</option>
-                <option value="#DDA0DD">Plum</option>
-                <option value="#EE82EE">Violet</option>
-                <option value="#DA70D6">Orchid</option>
-                <option value="#FF00FF">Fuchsia</option>
-                <option value="#FF00FF">Magenta</option>
-                <option value="#BA55D3">MediumOrchid</option>
-                <option value="#9370DB">MediumPurple</option>
-                <option value="#8A2BE2">BlueViolet</option>
-                <option value="#9400D3">DarkViolet</option>
-                <option value="#9932CC">DarkOrchid</option>
-                <option value="#8B008B">DarkMagenta</option>
-                <option value="#800080">Purple</option>
-                <option value="#663399">RebeccaPurple</option>
-                <option value="#4B0082">Indigo</option>
-                <option value="#7B68EE">MediumSlateBlue</option>
-                <option value="#6A5ACD">SlateBlue</option>
-                <option value="#483D8B">DarkSlateBlue</option>
-                <option value="#00FFFF">Aqua</option>
-                <option value="#00FFFF">Cyan</option>
-                <option value="#E0FFFF">LightCyan</option>
-                <option value="#AFEEEE">PaleTurquoise</option>
-                <option value="#7FFFD4">Aquamarine</option>
-                <option value="#40E0D0">Turquoise</option>
-                <option value="#48D1CC">MediumTurquoise</option>
-                <option value="#00CED1">DarkTurquoise</option>
-                <option value="#5F9EA0">CadetBlue</option>
-                <option value="#4682B4">SteelBlue</option>
-                <option value="#B0C4DE">LightSteelBlue</option>
-                <option value="#B0E0E6">PowderBlue</option>
-                <option value="#ADD8E6">LightBlue</option>
-                <option value="#87CEEB">SkyBlue</option>
-                <option value="#87CEFA">LightSkyBlue</option>
-                <option value="#00BFFF">DeepSkyBlue</option>
-                <option value="#1E90FF">DodgerBlue</option>
-                <option value="#6495ED">CornflowerBlue</option>
-                <option value="#4169E1">RoyalBlue</option>
-                <option value="#0000CD">MediumBlue</option>
-                <option value="#00008B">DarkBlue</option>
-                <option value="#000080">Navy</option>
-                <option value="#191970">MidnightBlue</option>
-                <option value="#ADFF2F">GreenYellow</option>
-                <option value="#7FFF00">Chartreuse</option>
-                <option value="#7CFC00">LawnGreen</option>
-                <option value="#00FF00">Lime</option>
-                <option value="#32CD32">LimeGreen</option>
-                <option value="#98FB98">PaleGreen</option>
-                <option value="#90EE90">LightGreen</option>
-                <option value="#00FA9A">MediumSpringGreen</option>
-                <option value="#00FF7F">SpringGreen</option>
-                <option value="#3CB371">MediumSeaGreen</option>
-                <option value="#2E8B57">SeaGreen</option>
-                <option value="#228B22">ForestGreen</option>
-                <option value="#006400">DarkGreen</option>
-                <option value="#9ACD32">YellowGreen</option>
-                <option value="#6B8E23">OliveDrab</option>
-                <option value="#808000">Olive</option>
-                <option value="#556B2F">DarkOliveGreen</option>
-                <option value="#66CDAA">MediumAquamarine</option>
-                <option value="#8FBC8F">DarkSeaGreen</option>
-                <option value="#20B2AA">LightSeaGreen</option>
-                <option value="#008B8B">DarkCyan</option>
-                <option value="#008080">Teal</option>
-                <option value="#FFD700">Gold</option>
-                <option value="#FFFF00">Yellow</option>
-                <option value="#FFFFE0">LightYellow</option>
-                <option value="#FFFACD">LemonChiffon</option>
-                <option value="#FAFAD2">LightGoldenrodYellow</option>
-                <option value="#FFEFD5">PapayaWhip</option>
-                <option value="#FFE4B5">Moccasin</option>
-                <option value="#FFDAB9">PeachPuff</option>
-                <option value="#EEE8AA">PaleGoldenrod</option>
-                <option value="#F0E68C">Khaki</option>
-                <option value="#BDB76B">DarkKhaki</option>
-                <option value="#FF7F50">Coral</option>
-                <option value="#FF6347">Tomato</option>
-                <option value="#FF4500">OrangeRed</option>
-                <option value="#FF8C00">DarkOrange</option>
-                <option value="#FFA500">Orange</option>
-                <option value="#FFC0CB">Pink</option>
-                <option value="#FFB6C1">LightPink</option>
-                <option value="#FF69B4">HotPink</option>
-                <option value="#FF1493">DeepPink</option>
-                <option value="#C71585">MediumVioletRed</option>
-                <option value="#DB7093">PaleVioletRed</option>
-                <option value="#CD5C5C">IndianRed</option>
-                <option value="#F08080">LightCoral</option>
-                <option value="#FA8072">Salmon</option>
-                <option value="#E9967A">DarkSalmon</option>
-                <option value="#FFA07A">LightSalmon</option>
-                <option value="#DC143C">Crimson</option>
-                <option value="#B22222">FireBrick</option>
-                <option value="#8B0000">DarkRed</option>
-                <option value="#FFF8DC">Cornsilk</option>
-                <option value="#FFEBCD">BlanchedAlmond</option>
-                <option value="#FFE4C4">Bisque</option>
-                <option value="#FFDEAD">NavajoWhite</option>
-                <option value="#F5DEB3">Wheat</option>
-                <option value="#DEB887">BurlyWood</option>
-                <option value="#D2B48C">Tan</option>
-                <option value="#BC8F8F">RosyBrown</option>
-                <option value="#F4A460">SandyBrown</option>
-                <option value="#DAA520">Goldenrod</option>
-                <option value="#B8860B">DarkGoldenrod</option>
-                <option value="#CD853F">Peru</option>
-                <option value="#D2691E">Chocolate</option>
-                <option value="#8B4513">SaddleBrown</option>
-                <option value="#A0522D">Sienna</option>
-                <option value="#A52A2A">Brown</option>
-                <option value="#800000">Maroon</option>
-                <option value="#FFFAFA">Snow</option>
-                <option value="#F0FFF0">Honeydew</option>
-                <option value="#F5FFFA">MintCream</option>
-                <option value="#F0FFFF">Azure</option>
-                <option value="#F0F8FF">AliceBlue</option>
-                <option value="#F8F8FF">GhostWhite</option>
-                <option value="#F5F5F5">WhiteSmoke</option>
-                <option value="#FFF5EE">Seashell</option>
-                <option value="#F5F5DC">Beige</option>
-                <option value="#FDF5E6">OldLace</option>
-                <option value="#FFFAF0">FloralWhite</option>
-                <option value="#FFFFF0">Ivory</option>
-                <option value="#FAEBD7">AntiqueWhite</option>
-                <option value="#FAF0E6">Linen</option>
-                <option value="#FFF0F5">LavenderBlush</option>
-                <option value="#FFE4E1">MistyRose</option>
-                <option value="#DCDCDC">Gainsboro</option>
-                <option value="#D3D3D3">LightGray</option>
-                <option value="#D3D3D3">LightGrey</option>
-                <option value="#C0C0C0">Silver</option>
-                <option value="#A9A9A9">DarkGray</option>
-                <option value="#A9A9A9">DarkGrey</option>
-                <option value="#808080">Gray</option>
-                <option value="#808080">Grey</option>
-                <option value="#696969">DimGray</option>
-                <option value="#696969">DimGrey</option>
-                <option value="#778899">LightSlateGray</option>
-                <option value="#778899">LightSlateGrey</option>
-                <option value="#708090">SlateGray</option>
-                <option value="#708090">SlateGrey</option>
-                <option value="#2F4F4F">DarkSlateGray</option>
-                <option value="#2F4F4F">DarkSlateGrey</option>
-            </select>
-        </label>
+
+                <select id="color-selector" onchange="changeBkgrndColorSelectorLabel()">
+                    <option value="#C0C0C0"></option>
+                    <option value="#FFFFFF">White</option>
+                    <option value="#FF0000">Red</option>
+                    <option value="#0000FF">Blue</option>
+                    <option value="#008000">Green</option>
+                    <option value="#000000">Black</option>
+                    <option value="#E6E6FA">Lavender</option>
+                    <option value="#D8BFD8">Thistle</option>
+                    <option value="#DDA0DD">Plum</option>
+                    <option value="#EE82EE">Violet</option>
+                    <option value="#DA70D6">Orchid</option>
+                    <option value="#FF00FF">Fuchsia</option>
+                    <option value="#FF00FF">Magenta</option>
+                    <option value="#BA55D3">MediumOrchid</option>
+                    <option value="#9370DB">MediumPurple</option>
+                    <option value="#8A2BE2">BlueViolet</option>
+                    <option value="#9400D3">DarkViolet</option>
+                    <option value="#9932CC">DarkOrchid</option>
+                    <option value="#8B008B">DarkMagenta</option>
+                    <option value="#800080">Purple</option>
+                    <option value="#663399">RebeccaPurple</option>
+                    <option value="#4B0082">Indigo</option>
+                    <option value="#7B68EE">MediumSlateBlue</option>
+                    <option value="#6A5ACD">SlateBlue</option>
+                    <option value="#483D8B">DarkSlateBlue</option>
+                    <option value="#00FFFF">Aqua</option>
+                    <option value="#00FFFF">Cyan</option>
+                    <option value="#E0FFFF">LightCyan</option>
+                    <option value="#AFEEEE">PaleTurquoise</option>
+                    <option value="#7FFFD4">Aquamarine</option>
+                    <option value="#40E0D0">Turquoise</option>
+                    <option value="#48D1CC">MediumTurquoise</option>
+                    <option value="#00CED1">DarkTurquoise</option>
+                    <option value="#5F9EA0">CadetBlue</option>
+                    <option value="#4682B4">SteelBlue</option>
+                    <option value="#B0C4DE">LightSteelBlue</option>
+                    <option value="#B0E0E6">PowderBlue</option>
+                    <option value="#ADD8E6">LightBlue</option>
+                    <option value="#87CEEB">SkyBlue</option>
+                    <option value="#87CEFA">LightSkyBlue</option>
+                    <option value="#00BFFF">DeepSkyBlue</option>
+                    <option value="#1E90FF">DodgerBlue</option>
+                    <option value="#6495ED">CornflowerBlue</option>
+                    <option value="#4169E1">RoyalBlue</option>
+                    <option value="#0000CD">MediumBlue</option>
+                    <option value="#00008B">DarkBlue</option>
+                    <option value="#000080">Navy</option>
+                    <option value="#191970">MidnightBlue</option>
+                    <option value="#ADFF2F">GreenYellow</option>
+                    <option value="#7FFF00">Chartreuse</option>
+                    <option value="#7CFC00">LawnGreen</option>
+                    <option value="#00FF00">Lime</option>
+                    <option value="#32CD32">LimeGreen</option>
+                    <option value="#98FB98">PaleGreen</option>
+                    <option value="#90EE90">LightGreen</option>
+                    <option value="#00FA9A">MediumSpringGreen</option>
+                    <option value="#00FF7F">SpringGreen</option>
+                    <option value="#3CB371">MediumSeaGreen</option>
+                    <option value="#2E8B57">SeaGreen</option>
+                    <option value="#228B22">ForestGreen</option>
+                    <option value="#006400">DarkGreen</option>
+                    <option value="#9ACD32">YellowGreen</option>
+                    <option value="#6B8E23">OliveDrab</option>
+                    <option value="#808000">Olive</option>
+                    <option value="#556B2F">DarkOliveGreen</option>
+                    <option value="#66CDAA">MediumAquamarine</option>
+                    <option value="#8FBC8F">DarkSeaGreen</option>
+                    <option value="#20B2AA">LightSeaGreen</option>
+                    <option value="#008B8B">DarkCyan</option>
+                    <option value="#008080">Teal</option>
+                    <option value="#FFD700">Gold</option>
+                    <option value="#FFFF00">Yellow</option>
+                    <option value="#FFFFE0">LightYellow</option>
+                    <option value="#FFFACD">LemonChiffon</option>
+                    <option value="#FAFAD2">LightGoldenrodYellow</option>
+                    <option value="#FFEFD5">PapayaWhip</option>
+                    <option value="#FFE4B5">Moccasin</option>
+                    <option value="#FFDAB9">PeachPuff</option>
+                    <option value="#EEE8AA">PaleGoldenrod</option>
+                    <option value="#F0E68C">Khaki</option>
+                    <option value="#BDB76B">DarkKhaki</option>
+                    <option value="#FF7F50">Coral</option>
+                    <option value="#FF6347">Tomato</option>
+                    <option value="#FF4500">OrangeRed</option>
+                    <option value="#FF8C00">DarkOrange</option>
+                    <option value="#FFA500">Orange</option>
+                    <option value="#FFC0CB">Pink</option>
+                    <option value="#FFB6C1">LightPink</option>
+                    <option value="#FF69B4">HotPink</option>
+                    <option value="#FF1493">DeepPink</option>
+                    <option value="#C71585">MediumVioletRed</option>
+                    <option value="#DB7093">PaleVioletRed</option>
+                    <option value="#CD5C5C">IndianRed</option>
+                    <option value="#F08080">LightCoral</option>
+                    <option value="#FA8072">Salmon</option>
+                    <option value="#E9967A">DarkSalmon</option>
+                    <option value="#FFA07A">LightSalmon</option>
+                    <option value="#DC143C">Crimson</option>
+                    <option value="#B22222">FireBrick</option>
+                    <option value="#8B0000">DarkRed</option>
+                    <option value="#FFF8DC">Cornsilk</option>
+                    <option value="#FFEBCD">BlanchedAlmond</option>
+                    <option value="#FFE4C4">Bisque</option>
+                    <option value="#FFDEAD">NavajoWhite</option>
+                    <option value="#F5DEB3">Wheat</option>
+                    <option value="#DEB887">BurlyWood</option>
+                    <option value="#D2B48C">Tan</option>
+                    <option value="#BC8F8F">RosyBrown</option>
+                    <option value="#F4A460">SandyBrown</option>
+                    <option value="#DAA520">Goldenrod</option>
+                    <option value="#B8860B">DarkGoldenrod</option>
+                    <option value="#CD853F">Peru</option>
+                    <option value="#D2691E">Chocolate</option>
+                    <option value="#8B4513">SaddleBrown</option>
+                    <option value="#A0522D">Sienna</option>
+                    <option value="#A52A2A">Brown</option>
+                    <option value="#800000">Maroon</option>
+                    <option value="#FFFAFA">Snow</option>
+                    <option value="#F0FFF0">Honeydew</option>
+                    <option value="#F5FFFA">MintCream</option>
+                    <option value="#F0FFFF">Azure</option>
+                    <option value="#F0F8FF">AliceBlue</option>
+                    <option value="#F8F8FF">GhostWhite</option>
+                    <option value="#F5F5F5">WhiteSmoke</option>
+                    <option value="#FFF5EE">Seashell</option>
+                    <option value="#F5F5DC">Beige</option>
+                    <option value="#FDF5E6">OldLace</option>
+                    <option value="#FFFAF0">FloralWhite</option>
+                    <option value="#FFFFF0">Ivory</option>
+                    <option value="#FAEBD7">AntiqueWhite</option>
+                    <option value="#FAF0E6">Linen</option>
+                    <option value="#FFF0F5">LavenderBlush</option>
+                    <option value="#FFE4E1">MistyRose</option>
+                    <option value="#DCDCDC">Gainsboro</option>
+                    <option value="#D3D3D3">LightGray</option>
+                    <option value="#D3D3D3">LightGrey</option>
+                    <option value="#C0C0C0">Silver</option>
+                    <option value="#A9A9A9">DarkGray</option>
+                    <option value="#A9A9A9">DarkGrey</option>
+                    <option value="#808080">Gray</option>
+                    <option value="#808080">Grey</option>
+                    <option value="#696969">DimGray</option>
+                    <option value="#696969">DimGrey</option>
+                    <option value="#778899">LightSlateGray</option>
+                    <option value="#778899">LightSlateGrey</option>
+                    <option value="#708090">SlateGray</option>
+                    <option value="#708090">SlateGrey</option>
+                    <option value="#2F4F4F">DarkSlateGray</option>
+                    <option value="#2F4F4F">DarkSlateGrey</option>
+                </select>
+            </label>
+        </div>
         <br/>
-        <label>
-            <div class="info-wrap-container">
-                Image file-path
-                <div class="info-wrap">
-                    <div class="info">
-                        Click the [Analyze Img] buton for a demo <br/>
-                        Place any image link here, and the generator will attempt <br/>
-                        to render an html and css webpage that looks like the image <br/>
-                        Multiple solid color rectangles works best. <br/>
-                        Click the [Analyze Img] button when you have input a filepath you want to analyze <br/> 
+
+
+
+        <div class="form-group">
+            <div class="static-info">
+                <br />
+                Click the [Analyze Img] buton for a demo
+                Place any image link here, and the generator will attempt
+                to render an html and css webpage that looks like the image
+                Multiple solid color rectangles works best.
+                Click the [Analyze Img] button when you have input a filepath you want to analyze
+            </div>
+            <label>
+                <div class="info-wrap-container">
+                    Image file-path
+                    <div class="info-wrap">
+                        <div class="info">
+                            Click the [Analyze Img] buton for a demo <br/>
+                            Place any image link here, and the generator will attempt <br/>
+                            to render an html and css webpage that looks like the image <br/>
+                            Multiple solid color rectangles works best. <br/>
+                            Click the [Analyze Img] button when you have input a filepath you want to analyze <br/> 
+                        </div>
                     </div>
                 </div>
-            </div>
-            <input id="image-path" class="top-marg2rem" type="text" placeholder="./template_examples/template1.png" />
-        </label>
+                <input id="image-path" class="top-marg2rem" type="text" placeholder="./template_examples/template1.png" />
+            </label>
+        </div>
         <br/>
-
-        <button onClick="logImageData()">Analyze Img</button>
-        <div id="clips"></div>
-
+        
     </div>
+        <div>
+        <button onClick="logImageData()">Analyze Img</button>
+        <div class="static-info" onClick="logImageData()">^ Click for Demo</div>
+        </div>
+        <div id="clips"></div>
+    </div>
+    <br/>
     <div class="flex-center-item-container">
-    <img id="model-image" src="" width="auto" height="auto" />
+        <div class="form-group">
+            <div class="static-info">
+                <br />
+                The area to the right of this info-text holds the image that is analyzed <br />
+                Once the image is analyzed a sample of the generated HTML is rendered below <br/>
+            </div>
+            <img id="model-image" src="" width="auto" height="auto" />
+        </div>
     <canvas id="canvas" class="hidden-canvas" width="0" height="0" style="border:1px solid #000"></canvas>
     </div>
     <div id="demo-page-section"></div>
@@ -318,7 +384,7 @@
 
         function changeVariabilityLabel(csl = null, lightenFont = null){
             csl = csl ? csl : document.getElementById('color-selector'); // bkgrnd color 
-            let base = hexToRgb(csl[csl.selectedIndex].value);//hexToRgb("#fbc034");
+            let base = hexToRgb(csl[csl.selectedIndex].value);
             let cvLabel = document.getElementById("color-variability-label");
             let cvVari = document.getElementById("color-variability").value || "0";
             cvVari = parseFloat(cvVari);
@@ -382,6 +448,18 @@
                     blue: parseInt(result[3], 16)
                 }
                 : null;
+        }
+        function showOptionsForm(){
+            let opts = document.getElementById("option-input-forms");
+            let ifo = document.getElementById("options-btn-info");
+            console.log(opts.style.display);
+            if(opts.style.display === "none"){
+                opts.style="display:block";
+                ifo.innerHTML = "^ Click to Hide Options"
+            } else {
+                opts.style = "display:none";
+                ifo.innerHTML = "^ Click for Options";
+            }
         }
     </script>
 </body>

@@ -115,7 +115,8 @@ select {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #fbc034;
+    background: #C0C0C0;
+     /* #fbc034; */
     padding-left: 2rem;
     padding-right: 2rem;
     padding-top: 2rem;
@@ -134,15 +135,41 @@ select {
     width: 8rem;
     height: 4rem;
     font: inherit;
-    background-color: #f3f3ff;
+    background-color:rgb(201, 196, 196);
     border: 1px solid #8a8a8a;
     box-shadow: 3px 3px 3px #3b4046;
+    margin: 4px;
+    border-radius: 8px;
 }
+
+.form-link{
+    text-decoration: none;
+    color: Black;
+}
+.form-link:hover{
+    color: Aqua;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px #3b4046;
+    text-decoration: underline;
+}
+
 
 #main button:hover {
     background-color: #ff9c00;
     border: 2px solid #2d3136;
     cursor: pointer;
+}
+
+.static-info {
+    background-color: Azure;
+    border: 1px solid #8a8a8a;
+    box-shadow: 3px 3px 3px #3b4046;
+    margin-left: 4px;
+    margin-right:4px;
+    margin-bottom:4px;
+    border-radius: 8px;
+    padding: 4px;
+    max-width: 300px;
 }
 
 .top-marg2rem{
@@ -156,6 +183,12 @@ select {
 
 .hidden-canvas{
     display: none;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #demo-page-section{
@@ -173,7 +206,6 @@ select {
     display: flex;
 }
 #model-image{
-    margin-top: 42px;
     justify-self: center;
     position: relative;
 }
