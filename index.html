@@ -15,9 +15,6 @@
     </div>
 
     <div id="main">
-        <img id="model-image" src="" width="auto" height="auto"/>
-        <canvas id="canvas" class="hidden-canvas" width="0" height="0" style="border:1px solid #000"></canvas>
-        <br />
         <label id="pivot-size-label">
             <div class="info-wrap-container">
                 Pivot-Size
@@ -238,6 +235,11 @@
 
         <button onClick="logImageData()">Analyze Img</button>
         <div id="clips"></div>
+
+    </div>
+    <div class="flex-center-item-container">
+    <img id="model-image" src="" width="auto" height="auto" />
+    <canvas id="canvas" class="hidden-canvas" width="0" height="0" style="border:1px solid #000"></canvas>
     </div>
     <div id="demo-page-section"></div>
     <script>
@@ -261,18 +263,23 @@
 
                 let html_and_css = HTMLandCSSstrings(rects, data.width, data.height);
                 
-                // open a window to display html and css text
-                let autoGenWindowDisplay = window.open();
-                autoGenWindowDisplay.document.write(`<head><title>Generated CSS</title><style>${html_and_css.cssStr}</style></head>`);
-                autoGenWindowDisplay.document.write(html_and_css.htmlStr);
 
-                // write the style to this page
-                addStyle(html_and_css.cssStr);
-                let demo_doc = document.getElementById("demo-page-section");
-                demo_doc.innerHTML = html_and_css.htmlStr;
+                postProcessing(html_and_css);
             }
         }
 
+
+        function postProcessing(html_and_css){
+            // write the style to this page
+            addStyle(html_and_css.cssStr);
+            let demo_doc = document.getElementById("demo-page-section");
+            demo_doc.innerHTML = html_and_css.htmlStr;
+
+            // open a window to display html and css text
+            let autoGenWindowDisplay = window.open();
+            autoGenWindowDisplay.document.write(`<head><title>Generated CSS</title><style>${html_and_css.cssStr}</style></head>`);
+            autoGenWindowDisplay.document.write(html_and_css.htmlStr);
+        }
 
         function addStyle(styleStr){
             const css = styleStr;

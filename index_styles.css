@@ -166,3 +166,14 @@ select {
     width: auto;
     margin-top: 42px;
 }
+.flex-center-item-container{
+    width: 100%;
+    height: auto;
+    justify-content: center;
+    display: flex;
+}
+#model-image{
+    margin-top: 42px;
+    justify-self: center;
+    position: relative;
+}
