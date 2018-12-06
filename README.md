@@ -1,6 +1,19 @@
 # Image-to-HTML
 ### A feature recognition app that analyzes an image to make a webpage
-- [Live Demo](https://parisdreyer.github.io/image-to-html/)
+
+
+## Live
+[Live Demo](https://parisdreyer.github.io/image-to-html/)
+
+
+
+## Technologies
+* Javascript
+* HTML
+* CSS
+
+
+
 
 ### Dependencies (if you're running it on a local machine)
 - Browser, such as Chrome or Firefox
